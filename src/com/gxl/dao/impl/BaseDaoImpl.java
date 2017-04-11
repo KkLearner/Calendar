@@ -257,8 +257,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@SuppressWarnings("unchecked")
 	public T getByIdWithoutDel(Integer id) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();
-		T t=null;
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		try{
 			t=(T)session.createCriteria(clazz).add(Restrictions.eq("if_del", 0)).add(Restrictions.idEq(id))
 					.uniqueResult();
