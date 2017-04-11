@@ -110,9 +110,9 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	}
 
 	@Override
-	public void add(Map<String, Object> condition){
+	public boolean add(Map<String, Object> condition){
 		if(condition==null||condition.isEmpty())
-			return;
+			return false;
 		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		try{
@@ -143,7 +143,9 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 		catch(Exception e){
 			e.printStackTrace();
 			tx.rollback();
+			return false;
 		}
+		return true;
 	}
 	
 	@Override

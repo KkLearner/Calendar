@@ -41,7 +41,7 @@ public class UploadUtils {
 				if(!file.exists())
 					file.mkdir();
 				path = path +userid+"/"+filename;
-				outputStream=new FileOutputStream(new File(path));
+				outputStream=new FileOutputStream(path);
 				outputStream.write(imgs);
 				outputStream.flush();
 				outputStream.close();				
@@ -68,7 +68,7 @@ public class UploadUtils {
 			if(!file.exists())
 				file.mkdir();			
 			path= path  +userid+"/"+filename;
-			outputStream=new FileOutputStream(new File(path));
+			outputStream=new FileOutputStream(path);
 			outputStream.write(imgs);
 			outputStream.flush();
 			outputStream.close();							

@@ -12,7 +12,7 @@ public interface BaseService<T> {
 
 	public abstract void add(T t);
 	
-	public abstract void add(Map<String, Object>map);
+	public abstract boolean add(Map<String, Object>map);
 
 	public abstract void delete(T t);
 

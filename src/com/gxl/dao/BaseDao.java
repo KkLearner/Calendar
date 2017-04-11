@@ -14,7 +14,7 @@ public interface BaseDao<T> {
 	
 	public abstract void add(T t);
 
-	public abstract void add(Map<String, Object> condition);
+	public abstract boolean add(Map<String, Object> condition);
 	
 	public abstract void delete(T t);
 

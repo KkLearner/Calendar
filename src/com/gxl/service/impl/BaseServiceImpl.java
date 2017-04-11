@@ -35,8 +35,8 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 	}
 	
 	@Override
-	public void add(Map<String, Object>map){
-		this.dao.add(map);
+	public boolean add(Map<String, Object>map){
+		return this.dao.add(map);
 	}
 	
 	@Override

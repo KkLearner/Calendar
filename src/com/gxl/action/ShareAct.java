@@ -227,6 +227,19 @@ public class ShareAct {
 		return share(3, map);
 	}
 	
+	private void changeJson(Map<String, Object> map) {
+		String person_extend=(String)map.get("person_extend");
+		if(person_extend!=null&&!person_extend.equals("")){
+			map.replace("person_extend", JSONObject.fromObject(person_extend).toString());
+		}
+		String connect_extend=(String)map.get("connect_extend");
+		if(connect_extend!=null&&!connect_extend.equals(""))
+			map.replace("connect_extend", JSONObject.fromObject(connect_extend).toString());
+		String other_extend=(String)map.get("other_extend");
+		if(other_extend!=null&&!other_extend.equals(""))
+			map.replace("other_extend", JSONObject.fromObject(other_extend).toString());
+	}
+
 	//设置所有信息
 	//表gxl_user
 	@ResponseBody
@@ -241,13 +254,14 @@ public class ShareAct {
 				map.replace("birthday", null);
 			else
 				map.replace("birthday", new java.sql.Date(Long.valueOf(birthday)));
+			changeJson(map);
 			map.put("uDate", new Date());
 			if(gxlUserService.update(map, condition))
 				return ResultReturn.setMap(result, 0, "success", null);
 			return ResultReturn.setMap(result, 1, "false", null);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResultReturn.setMap(result, 1, "false", null);
+			return ResultReturn.setMap(result, 1, e.getMessage(), null);
 		}
 	}
 	
@@ -263,7 +277,7 @@ public class ShareAct {
 				return ResultReturn.setMap(result, 1, "no this userid", null);
 			String[] imgbase64=request.getParameterValues("images");//base64数组
 			map.remove("images");
-			if(imgbase64!=null&&imgbase64.length>0){
+			if(imgbase64!=null&&imgbase64.length>0&&!imgbase64[0].equals("")){
 				//上传图片并返回文件名
 				String pic=UploadUtils.uploadFeedbackPic(Integer.valueOf((String)map.get("userid")), imgbase64);
 				if(pic.equals(""))
@@ -277,11 +291,12 @@ public class ShareAct {
 			else
 				map.replace("fault_time", new Date(Long.valueOf(fault_time)));
 			map.put("uDate", new Date());
-			feedbackService.add(map);
+			if(!feedbackService.add(map))
+				return ResultReturn.setMap(result, 1, "info is error", null);
 			return ResultReturn.setMap(result, 0, "success", null);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResultReturn.setMap(result, 1, "false", null);
+			return ResultReturn.setMap(result, 1, e.getMessage(), null);
 		}
 	}
 }
