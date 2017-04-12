@@ -30,7 +30,9 @@
         <property name="user" value="spring"></property>  
         <property name="password" value="springtest"></property>  
         <property name="driverClass" value="com.mysql.jdbc.Driver"></property>  
-        <property name="jdbcUrl" value="jdbc:mysql://139.199.165.63:3306/springdemo?useUnicode=true&amp;characterEncoding=UTF8"></property>      
+        <property name="jdbcUrl" value="jdbc:mysql://139.199.165.63:3306/springdemo?autoReconnect=true&amp;failOverReadOnly=false&amp;useUnicode=true&amp;characterEncoding=UTF8"></property>
+        <property name="testConnectionOnCheckin" value="false"/>
+   		<property name="testConnectionOnCheckout" value="true"/>      
     </bean> 
     
 	<!-- 会话工厂 -->

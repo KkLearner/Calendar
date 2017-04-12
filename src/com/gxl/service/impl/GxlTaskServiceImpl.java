@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gxl.dao.GxlTaskDao;
 import com.gxl.entity.GxlTask;
+import com.gxl.response.InvitedInfoResponse;
+import com.gxl.response.ModifyInfoResponse;
 import com.gxl.service.GxlTaskService;
 
 @Transactional
@@ -21,4 +23,15 @@ public class GxlTaskServiceImpl extends BaseServiceImpl<GxlTask> implements GxlT
 	public List<Map<String, Object>> getTodayAllTask(String what,Integer userid,String date){
 		return gxlTaskDao.getTodayAllTask(what,userid, date);
 	}
+
+	@Override
+	public InvitedInfoResponse getInviteInfo(Integer taskid) {
+		return gxlTaskDao.getInviteInfo(taskid);
+	}
+
+	@Override
+	public ModifyInfoResponse getModifyInfo(Integer taskid) {
+		return gxlTaskDao.getModifyInfo(taskid);
+	}
+	
 }

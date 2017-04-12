@@ -39,6 +39,7 @@ import com.gxl.service.ResponseInviteService;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/Task")
@@ -291,7 +292,29 @@ public class TaskAct {
 			exception.printStackTrace();
 			return ResultReturn.setMap(result, 3, exception.getMessage(), null);
 		}
+	}
+	
+	@CrossOrigin(origins="*",maxAge=3600)
+	@ResponseBody
+	@RequestMapping(value="/GetInvitationInfo",method=RequestMethod.GET, headers="Accept=application/json")
+	public String getInvitationInfo(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {		
+		try {									
+			return (JSONObject.fromObject(gxlTaskService.getInviteInfo(Integer.valueOf((String)map.get("taskid")))).toString());
+		}catch(Exception exception){			
+			return "{msg:\"Server error\", error:2}";
+		}
 		
+	}
+	
+	@CrossOrigin(origins="*",maxAge=3600)
+	@ResponseBody
+	@RequestMapping(value="/GetModifyInfo",method=RequestMethod.GET, headers="Accept=application/json")
+	public String GetModifyInfo(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {		
+		try {						
+			return (JSONObject.fromObject(gxlTaskService.getModifyInfo(Integer.valueOf((String)map.get("taskid")))).toString());
+		}catch(Exception exception){			
+			return "{msg:\"Server error\", error:2}";
+		}
 	}
 		
 }
