@@ -258,6 +258,7 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	public T getByIdWithoutDel(Integer id) {
 		Session session = sessionFactory.getCurrentSession();
 		Transaction tx;
+		T t=null;
 	    if (session.getTransaction() != null
 	            && session.getTransaction().isActive()) {
 	        tx = session.getTransaction();
