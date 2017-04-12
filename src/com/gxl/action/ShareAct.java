@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gxl.common.utils.ResultReturn;
 import com.gxl.common.utils.UploadUtils;
@@ -269,17 +270,17 @@ public class ShareAct {
 	//表feedback
 	@ResponseBody
 	@RequestMapping(value="/Feedback",method=RequestMethod.POST,headers="Accept=application/json")
-	public Map<String, Object> feedback(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
+	public Map<String, Object> feedback(@RequestParam Map<String,Object>map,
+			@RequestParam(value = "images") MultipartFile[] images,
+			HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
 		Map<String, Object> result=new HashMap<>();
 		try {
 			GxlUser user=gxlUserService.getByIdWithoutDel(Integer.valueOf((String)map.get("userid")));
 			if(user==null)
 				return ResultReturn.setMap(result, 1, "no this userid", null);
-			String[] imgbase64=request.getParameterValues("images");//base64数组
-			map.remove("images");
-			if(imgbase64!=null&&imgbase64.length>0&&!imgbase64[0].equals("")){
+			if(images!=null&&images.length>0&&!images[0].isEmpty()){
 				//上传图片并返回文件名
-				String pic=UploadUtils.uploadFeedbackPic(Integer.valueOf((String)map.get("userid")), imgbase64);
+				String pic=UploadUtils.uploadFeedbackPic(Integer.valueOf((String)map.get("userid")), images);
 				if(pic.equals(""))
 					return ResultReturn.setMap(result, 2, "img fault", null);
 				map.put("imgs", pic);				

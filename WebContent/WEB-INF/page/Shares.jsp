@@ -121,7 +121,7 @@
     </table>
 </form>
 
-<form action="/Calendar/Share/Feedback" method="POST">
+<form action="/Calendar/Share/Feedback" method="POST" enctype="multipart/form-data">
 	<table width="500px" border="1px #FFFFFF soild">
     	<tr>
         	<th colspan="2" align="left">反馈  Feedback</th>
@@ -136,7 +136,7 @@
         </tr>
         <tr>
         	<td width="30%">images(base64码的数组)</td>
-            <td><input type="text" name="images"  value=""/></td>
+            <td><input type="file" name="images"  value="" multiple /></td>
         </tr>  
         <tr>
         	<td width="30%">fault_time(故障时间)</td>

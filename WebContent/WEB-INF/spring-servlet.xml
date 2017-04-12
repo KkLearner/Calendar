@@ -28,4 +28,11 @@
     </bean> 
       
       <mvc:resources location="/WEB-INF/upload/" mapping="/upload/**"/>
+      
+    <!-- SpringMVC提供的实现文件上传的bean -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="5368709120" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
 </beans>  

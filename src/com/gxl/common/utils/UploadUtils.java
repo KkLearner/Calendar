@@ -13,6 +13,7 @@ import javax.servlet.ServletContext;
 
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -23,18 +24,17 @@ public class UploadUtils {
 	static ServletContext  servletContext = webApplicationContext.getServletContext();
 	private static SimpleDateFormat sf=new SimpleDateFormat("yyyyMMddHHmmss");
 	
-	public static String uploadFeedbackPic(Integer userid,String[] base64Pic) {
+	public static String uploadFeedbackPic(Integer userid,MultipartFile[] base64Pic) {
 		if(base64Pic==null||base64Pic.length<=0)
 			return "";
 		OutputStream outputStream=null;
 		String names="";
 		try {
-			BASE64Decoder decoder=new BASE64Decoder();
 			int i=0;
-			for(String pic:base64Pic){
-				System.out.println(pic);
-				byte[] imgs=decoder.decodeBuffer(pic);
-				String filename=sf.format(new Date())+"_"+i+".jpg";
+			for(MultipartFile pic:base64Pic){
+				//源文件名
+				String origin=pic.getOriginalFilename();//文件名(已包括后缀)
+				String filename=sf.format(new Date())+"_"+i+"."+origin.substring(origin.lastIndexOf(".")+1);
 				names=names+filename+",";
 				String path = servletContext.getRealPath("/WEB-INF/upload/feedback/");
 				File file=new File(path+userid);
@@ -42,7 +42,7 @@ public class UploadUtils {
 					file.mkdir();
 				path = path +userid+"/"+filename;
 				outputStream=new FileOutputStream(path);
-				outputStream.write(imgs);
+				outputStream.write(pic.getBytes());
 				outputStream.flush();
 				outputStream.close();				
 				++i;
