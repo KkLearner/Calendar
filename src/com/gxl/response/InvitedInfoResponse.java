@@ -7,6 +7,8 @@ import com.gxl.response.model.Invitee;
 public class InvitedInfoResponse {
 	int id;
 	int total;
+	int error;
+	String msg;
 	String avatar;	
 	String name;
 	String topic;
@@ -29,6 +31,18 @@ public class InvitedInfoResponse {
 	public void setId(int id) {
 		this.id = id;
 	}	
+	public int getError() {
+		return error;
+	}
+	public void setError(int error) {
+		this.error = error;
+	}
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
 	public int getTotal() {
 		return total;
 	}

@@ -75,7 +75,7 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 			invitedInfoResponse.setStartTime((Timestamp)map.get("start_time"));
 			invitedInfoResponse.setEndTime((Timestamp)map.get("end_time"));
 			
-			map = (Map<String, Object>) session.createSQLQuery("SELECT head_img from gxl_user "
+			map = (Map<String, Object>) session.createSQLQuery("SELECT head_img,nickname from gxl_user "
 					+ "where gxlid=:gxlid")						
 					.setInteger("gxlid", (int) map.get("userid"))
 					.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP)
@@ -110,6 +110,8 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 				
 			}
 			invitedInfoResponse.setInvitees(invitees);
+			invitedInfoResponse.setError(0);
+			invitedInfoResponse.setMsg("Sucess");
 			tx.commit();
 			return invitedInfoResponse;
 		} catch (Exception e) {
@@ -140,6 +142,8 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 			modifyInfoResponse.setPlace((String)map.get("address"));
 			modifyInfoResponse.setRemarks((String)map.get("remark"));
 			modifyInfoResponse.setDuration((String)map.get("expect_time"));
+			modifyInfoResponse.setStartTime((Timestamp)map.get("start_time"));
+			modifyInfoResponse.setEndTime((Timestamp)map.get("end_time"));
 			modifyInfoResponse.setModifyReason((String)map.get("modify_reason"));
 			
 			map = (Map<String, Object>) session.createSQLQuery("SELECT head_img from gxl_user "
@@ -149,7 +153,9 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 					.list().get(0);
 			
 			modifyInfoResponse.setName((String)map.get("nickname"));	
-			modifyInfoResponse.setAvatar((String)map.get("head_img"));						
+			modifyInfoResponse.setAvatar((String)map.get("head_img"));
+			modifyInfoResponse.setError(0);
+			modifyInfoResponse.setMsg("Sucess");
 			tx.commit();
 			return modifyInfoResponse;
 		} catch (Exception e) {
@@ -159,6 +165,29 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 		return modifyInfoResponse;
 		
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void copyTask(Integer userid, Integer taskid) {		
+		Session session=sessionFactory.getCurrentSession();
+		Transaction tx=session.beginTransaction();		
+		try {
+			
+			session.createSQLQuery("INSERT into gxl_task"
+					+ "(userid,type_id,type_name,title,address,start_time,end_time,free_time,expect_time,remark)"
+					+ " select :userid,type_id,type_name,title,address,start_time,end_time,free_time,expect_time,remark"
+					+ " from gxl_task "
+					+ " where id=:taskid and if_del=0 ")
+					.setInteger("userid", userid)
+					.setInteger("taskid", taskid)					
+					.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP)
+					.list().get(0);			
+								
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();		
+		}		
 	}
 	
 }

@@ -58,40 +58,40 @@ public class ResponseInviteServiceImpl extends BaseServiceImpl<ResponseInvite> i
 		List<Map<String, Object>> invitee=new ArrayList<>();
 		try {
 			String []users=invitees.split(",");
+			SimpleDateFormat sf=new SimpleDateFormat();
 			for(String invited:users){
 				Map<String, Object> teMap=new HashMap<>();
-				List<ResponseInvite> responseInvites=responseInviteDao.getByCriterion(Restrictions.eq("taskid", taskid),Restrictions.eq("invitee", Integer.valueOf(invited)));
+				List<ResponseInvite> responseInvites=responseInviteDao.getByCriterion(Restrictions.eq("taskid", taskid),Restrictions.eq("invitee", invited));
 				if(responseInvites==null||responseInvites.isEmpty())
 					continue;
 				teMap.put("Invitee_id", invited);
 				ResponseInvite responseInvite=responseInvites.get(0);
 				Integer t=responseInvite.getType();
 				teMap.put("type", t);
-				String refuse="";
-				java.util.Date start_time=null;
-				java.util.Date end_time=null;
+				String refuse=null;
+				String time_horizon=null;
 				java.util.Date inform_time=null;
-				String free_time="";
 				switch (t) {
 				case 0://默认，未回复
 					break;
 				case 1://拒绝
 					refuse=responseInvite.getRefuse();
 					break;
-				case 2:case 3://接受并待定//接受并确定
-					start_time=responseInvite.getStart_time();//开始时间
-					end_time=responseInvite.getEnd_time();//结束时间
-					if(t==3)
-						free_time=responseInvite.getFree_time();//空余时间
+				case 2://接受并确定
+					sf.applyPattern("yyyy/MM/dd HH:mm:ss");
 					inform_time=responseInvite.getRemind_time();
+					time_horizon=sf.format(responseInvite.getStart_time())+","+sf.format(responseInvite.getEnd_time());
+					break;
+				case 3://接受并待定
+					sf.applyPattern("yyyy/MM/dd");
+					inform_time=responseInvite.getRemind_time();
+					time_horizon=sf.format(responseInvite.getStart_time())+","+responseInvite.getFree_time();
 					break;
 				default:
 					break;
 				}
 				teMap.put("content", refuse);
-				teMap.put("start_time", start_time);
-				teMap.put("end_time", end_time);
-				teMap.put("free_time", free_time);
+				teMap.put("time_horizon", time_horizon);
 				teMap.put("inform_time", inform_time);
 				invitee.add(teMap);
 			}

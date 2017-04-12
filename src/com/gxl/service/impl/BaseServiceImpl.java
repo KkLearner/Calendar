@@ -179,4 +179,8 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 	public Integer findTotalByUniqueProperty(String key, Object value) {
 		return this.dao.findTotalByUniqueProperty(key, value);
 	}
+
+	@Override
+	public void copyTask(Integer userid, Integer taskid) {
+	}
 }

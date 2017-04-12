@@ -206,7 +206,7 @@ public class TaskAct {
 				break;
 			case 2:case 3://接受
 				start_time=new java.util.Date(Long.valueOf((String)map.get("start_time")));
-				end_time=new java.util.Date(Long.valueOf((String)map.get("start_time")));
+				end_time=new java.util.Date(Long.valueOf((String)map.get("end_time")));
 				if(type==3){
 					SimpleDateFormat sf=new SimpleDateFormat("HH:mm");
 					List<Map<String, Object>> array=(List<Map<String, Object>>)JSONArray.fromObject((String)map.get("free_time"));
@@ -217,6 +217,7 @@ public class TaskAct {
 					responseInvite.setFree_time(buffer.substring(0, buffer.length()-1));
 				}
 				responseInvite.setRemind_time(new java.util.Date(Long.valueOf((String)map.get("remind_time"))));
+				gxlTaskService.copyTask(Integer.valueOf((String)map.get("invitee")), Integer.valueOf((String)map.get("taskid")));
 				break;
 			default:
 				return ResultReturn.setMap(result, 3, "no this type", null);

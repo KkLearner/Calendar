@@ -34,4 +34,8 @@ public class GxlTaskServiceImpl extends BaseServiceImpl<GxlTask> implements GxlT
 		return gxlTaskDao.getModifyInfo(taskid);
 	}
 	
+	@Override
+	public void copyTask(Integer userid, Integer taskid) {
+		gxlTaskDao.copyTask(userid, taskid);
+	}
 }

@@ -56,6 +56,9 @@ public class GxlTask implements java.io.Serializable{
 	@Column(name="expect_time")
 	private String expect_time;
 	
+	@Column(name="edit_reason")
+	private String editReason;
+	
 	@Column(name="remark")
 	private String remark;
 	
@@ -205,6 +208,14 @@ public class GxlTask implements java.io.Serializable{
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getEditReason() {
+		return editReason;
+	}
+
+	public void setEditReason(String editReason) {
+		this.editReason = editReason;
 	}
 
 	public Integer getIf_del() {

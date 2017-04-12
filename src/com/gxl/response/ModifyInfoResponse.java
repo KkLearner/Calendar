@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 public class ModifyInfoResponse {
 	int id;
+	int error;
+	String msg;
 	String avatar;	
 	String name;
 	String topic;
@@ -16,6 +18,19 @@ public class ModifyInfoResponse {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+	public int getError() {
+		return error;
+	}
+	public void setError(int error) {
+		this.error = error;
 	}
 	public String getAvatar() {
 		return avatar;
