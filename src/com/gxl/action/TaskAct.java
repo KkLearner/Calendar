@@ -38,6 +38,8 @@ import com.gxl.service.GxlUserService;
 import com.gxl.service.ResponseInviteService;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
+import net.sf.json.JSONArray;
+
 @Controller
 @RequestMapping("/Task")
 public class TaskAct {
@@ -146,27 +148,19 @@ public class TaskAct {
 		Map<String,Object> result=new HashMap<String,Object>();
 		try {
 			Integer id=Integer.valueOf((String)map.get("userid"));
-			List<GxlUser> users=gxlUserService.getByCriterion(Restrictions.eq("gxlid", id),
-					Restrictions.eq("if_del", 0));//查找是否存在该用户
-			if(users==null||users.isEmpty())
-				return ResultReturn.setMap(result, 1, "no this user", null);	
-			GxlUser user=users.get(0);
+			GxlUser user=gxlUserService.getByIdWithoutDel(id);//查找是否存在该用户
+			if(user==null)
+				return ResultReturn.setMap(result, 1, "no this user", null);
 			Integer schedule_type=Integer.valueOf((String)map.remove("schedule_type"));
-			String time=(String)map.remove("time_range");
-			String []times=time.split(",");
-			java.util.Date start_time=null;
-			java.util.Date end_time=null;
-			String free_time="";
-			SimpleDateFormat sf=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			SimpleDateFormat sf=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");	
+			java.util.Date start_time=sf.parse((String)map.get("start_time"));
+			java.util.Date end_time=sf.parse((String)map.get("end_time"));
+			String free_time="";		
 			switch (schedule_type) {
 			case 0://确定的日程	
-				start_time=sf.parse(times[0]);
-				end_time= sf.parse(times[1]);
 				break;
 			case 1://待定的日程
-				start_time=sf.parse(times[0]+" 00:00:00");
-				end_time=sf.parse(times[0]+" 23:59:59");
-				free_time=times[1];
+				free_time=(String)map.get("free_time");
 				break;
 			default:
 				return ResultReturn.setMap(result, 2, "no this schedule_type", null);
@@ -205,32 +199,29 @@ public class TaskAct {
 			Integer type=Integer.valueOf((String)map.get("type"));	
 			java.util.Date start_time=null;
 			java.util.Date end_time=null;
-			String free_time="";
-			SimpleDateFormat sf=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); 
 			switch (type) {
 			case 1://拒绝
 				responseInvite.setRefuse((String)map.get("refuse"));
 				break;
 			case 2:case 3://接受
-				String time=(String)map.remove("time_range_accept");
-				String []times=time.split(",");
-				if(type==2){
-					start_time=sf.parse(times[0]);
-					end_time=sf.parse(times[1]);
+				start_time=new java.util.Date(Long.valueOf((String)map.get("start_time")));
+				end_time=new java.util.Date(Long.valueOf((String)map.get("start_time")));
+				if(type==3){
+					SimpleDateFormat sf=new SimpleDateFormat("HH:mm");
+					List<Map<String, Object>> array=(List<Map<String, Object>>)JSONArray.fromObject((String)map.get("free_time"));
+					StringBuffer buffer=new StringBuffer("");
+					for(Map<String, Object> temp:array){
+						buffer.append(sf.format(new java.util.Date(Long.valueOf((String)temp.get("start_time"))))+"-"+sf.format(new java.util.Date(Long.valueOf((String)temp.get("end_time"))))+"|");
+					}
+					responseInvite.setFree_time(buffer.substring(0, buffer.length()-1));
 				}
-				else{
-					start_time=sf.parse(times[0]+" 00:00:00");
-					end_time=sf.parse(times[0]+" 23:59:59");
-					free_time=times[1];
-				}
-				responseInvite.setRemind_time(sf.parse((String)map.get("remind_time")));
+				responseInvite.setRemind_time(new java.util.Date(Long.valueOf((String)map.get("remind_time"))));
 				break;
 			default:
 				return ResultReturn.setMap(result, 3, "no this type", null);
 			}
 			responseInvite.setStart_time(start_time);
 			responseInvite.setEnd_time(end_time);
-			responseInvite.setFree_time(free_time);
 			responseInvite.setType(type);
 			responseInvite.setuDate(new java.util.Date());
 			responseInviteService.update(responseInvite);
@@ -241,43 +232,66 @@ public class TaskAct {
 		}
 	}
 	
+	//设置邀请信息
+	private Map<String, Object> setInvitationInfo(Map<String, Object> map,Integer type) {
+		Map<String,Object> result=new HashMap<String,Object>();
+		GxlTask task=gxlTaskService.getById(Integer.valueOf((String)map.get("invite_id")));
+		if(task==null||task.getType_id()==0)
+			return ResultReturn.setMap(result, 1, "no this invite_id", null);
+		GxlUser user=gxlUserService.getByIdWithoutDel(task.getUserid());
+		if(user==null)
+			return ResultReturn.setMap(result, 2, "no this invite_id", null);	
+		result.put("invite_id", task.getId());//邀请id
+		result.put("invite_name", user.getNickname());//昵称
+		result.put("avatar", user.getHead_img());//头像地址
+		result.put("invitor_id", task.getUserid());//邀请者id
+		result.put("title", task.getTitle());//标题
+		result.put("type", task.getType_id());//1：确定日程，2：待定日程
+		result.put("location", task.getAddress());//地点
+		result.put("content", task.getRemark());//备注
+		result.put("scheduled_time", task.getExpect_time());//预计时间
+		result.put("free_time", task.getFree_time());//空余时间
+		result.put("inform_time", task.getRemind_time());//提前通知时间
+		result.put("start_time", task.getStart_time());//开始时间
+		result.put("end_time", task.getEnd_time());//结束时间
+		String invited_userid=task.getInvited_userid();
+		if(type==0&&!invited_userid.equals(""))
+			result.put("invitees", responseInviteService.responseInvitations(task.getId(), invited_userid, result));			
+		return ResultReturn.setMap(result, 0, "success", null);
+	}
+	
 	//通过id获取邀请信息
 	//表response_invite  
 	@CrossOrigin(origins="*",maxAge=3600)
 	@ResponseBody
-	@RequestMapping(value="/GetInvitation",method=RequestMethod.POST,headers="Accept=application/json")
-	public Map<String,Object> getInvitation(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
+	@RequestMapping(value="/GetAppInvitation",method=RequestMethod.POST,headers="Accept=application/json")
+	public Map<String,Object> getAppInvitation(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
 		Map<String,Object> result=new HashMap<String,Object>();
 		try {
-			Integer invite_id=Integer.valueOf((String)map.get("invite_id"));
-			GxlTask task=gxlTaskService.getById(invite_id);
-			if(task==null||task.getType_id()==0)
-				return ResultReturn.setMap(result, 1, "no this invite_id", null);
-			SimpleDateFormat sf=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			Integer style=task.getType_id();
-			String invited_userid=task.getInvited_userid();
-			result.put("invite_id", invite_id);//邀请id
-			result.put("invitor_id", task.getUserid());//邀请者id
-			result.put("title", task.getTitle());//标题
-			result.put("type", style);//1：确定日程，2：待定日程
-			result.put("location", task.getAddress());//地点
-			result.put("content", task.getRemark());//备注
-			result.put("scheduled_time", task.getExpect_time());//预计时间
-			result.put("inform_time", sf.format(task.getRemind_time()));//提前通知时间
-			if(style==1)//确定的日程
-				result.put("time_range", sf.format(task.getStart_time())+","+sf.format(task.getEnd_time()));
-			else if(style==2){//待定的日程
-				sf.applyPattern("yyyy/MM/dd");
-				result.put("time_range",sf.format(task.getStart_time())+","+task.getFree_time());
-			}
-			if(!invited_userid.equals(""))				
-				result.put("invitees", responseInviteService.responseInvitations(task.getId(), invited_userid, result));
-			return ResultReturn.setMap(result, 0, "success", null);
+			return setInvitationInfo(map, 0);
 		}catch (Exception e) {
 			result.clear();
 			e.printStackTrace();
-			return ResultReturn.setMap(result, 2, "false", null);
+			return ResultReturn.setMap(result, 3, e.getMessage(), null);
 		}
 		
 	}
+	
+	//通过id获取邀请信息
+	//表response_invite  
+	@CrossOrigin(origins="*",maxAge=3600)
+	@ResponseBody
+	@RequestMapping(value="/GetWebInvitation",method=RequestMethod.GET,headers="Accept=application/json")
+	public Map<String,Object> getWebInvitation(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
+		Map<String,Object> result=new HashMap<String,Object>();
+		try {
+			return setInvitationInfo(map, 1);
+		}catch(Exception exception){
+			result.clear();
+			exception.printStackTrace();
+			return ResultReturn.setMap(result, 3, exception.getMessage(), null);
+		}
+		
+	}
+		
 }
