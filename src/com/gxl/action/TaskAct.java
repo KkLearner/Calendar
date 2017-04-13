@@ -190,8 +190,9 @@ public class TaskAct {
 	public Map<String,Object> responseInvite(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
 		Map<String,Object> result=new HashMap<String,Object>();
 		try {
+			Integer invitee=Integer.valueOf((String)map.get("invitee"));
 			List<ResponseInvite> invite=responseInviteService.getByCriterion(Restrictions.eq("taskid", Integer.valueOf((String)map.get("taskid"))),
-					Restrictions.eq("invitee", Integer.valueOf((String)map.get("invitee"))));
+					Restrictions.eq("invitee", invitee));
 			if(invite==null||invite.isEmpty())
 				return ResultReturn.setMap(result, 1, "no this intitation", null);
 			ResponseInvite responseInvite=invite.get(0);
@@ -207,17 +208,20 @@ public class TaskAct {
 			case 2:case 3://接受
 				start_time=new java.util.Date(Long.valueOf((String)map.get("start_time")));
 				end_time=new java.util.Date(Long.valueOf((String)map.get("end_time")));
+				String free_time="";
 				if(type==3){
 					SimpleDateFormat sf=new SimpleDateFormat("HH:mm");
 					List<Map<String, Object>> array=(List<Map<String, Object>>)JSONArray.fromObject((String)map.get("free_time"));
 					StringBuffer buffer=new StringBuffer("");
-					for(Map<String, Object> temp:array){
+					for(Map<String, Object> temp:array)
 						buffer.append(sf.format(new java.util.Date(Long.valueOf((String)temp.get("start_time"))))+"-"+sf.format(new java.util.Date(Long.valueOf((String)temp.get("end_time"))))+"|");
-					}
-					responseInvite.setFree_time(buffer.substring(0, buffer.length()-1));
+					free_time=buffer.substring(0, buffer.length()-1);
+					responseInvite.setFree_time(free_time);
 				}
-				responseInvite.setRemind_time(new java.util.Date(Long.valueOf((String)map.get("remind_time"))));
-				gxlTaskService.copyTask(Integer.valueOf((String)map.get("invitee")), Integer.valueOf((String)map.get("taskid")));
+				java.util.Date remind_time=new java.util.Date(Long.valueOf((String)map.get("remind_time")));
+				responseInvite.setRemind_time(remind_time);
+				gxlTaskService.copyTask(Integer.valueOf((String)map.get("invitee")), Integer.valueOf((String)map.get("taskid")),
+						start_time,end_time,free_time,remind_time);
 				break;
 			default:
 				return ResultReturn.setMap(result, 3, "no this type", null);
@@ -303,7 +307,7 @@ public class TaskAct {
 		try {							
 			return  ResultReturn.setJson(result, 0, "success", gxlTaskService.getInviteInfo(Integer.valueOf((String)map.get("taskid"))));
 		}catch(Exception exception){			
-			return ResultReturn.setJson(result, 3, "false", null);
+			return ResultReturn.setJson(result, 3, exception.getMessage(), null);
 		}
 		
 	}
@@ -316,7 +320,7 @@ public class TaskAct {
 		try {							
 			return  ResultReturn.setJson(result, 0, "success", gxlTaskService.getModifyInfo(Integer.valueOf((String)map.get("taskid"))));
 		}catch(Exception exception){			
-			return ResultReturn.setJson(result, 3, "false", null);
+			return ResultReturn.setJson(result, 3, exception.getMessage(), null);
 		}
 	}
 		

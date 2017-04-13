@@ -1,5 +1,6 @@
 package com.gxl.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,8 @@ public class GxlTaskServiceImpl extends BaseServiceImpl<GxlTask> implements GxlT
 	} 
 	
 	@Override
-	public void copyTask(Integer userid, Integer taskid) {
-		gxlTaskDao.copyTask(userid, taskid);
+	public void copyTask(Integer userid, Integer taskid,Date start_time,
+			Date end_time,String free_time,Date remind_time) {
+		gxlTaskDao.copyTask(userid, taskid,start_time,end_time,free_time,remind_time);
 	}
 }

@@ -110,8 +110,8 @@
             <td><input type="text" name="end_time"  value="2017/03/21 12:12:00"/></td>
         </tr>
         <tr>
-        	<td width="30%">time_range(空余时间，07:00-08:10|09:10-10:32)</td>
-            <td><input type="text" name="time_range"  value="07:00-08:10|09:10-10:32"/></td>
+        	<td width="30%">free_time(空余时间，07:00-08:10|09:10-10:32)</td>
+            <td><input type="text" name="free_time"  value="07:00-08:10|09:10-10:32"/></td>
         </tr>
          <tr>
         	<td width="30%">expect_time(预计时间)</td>
@@ -146,15 +146,15 @@
         </tr> 
         <tr>
         	<td width="30%">start_time(开始时间，type=2,3时填写,时间戳)</td>
-            <td><input type="text" name="remind_time"  value=""/></td>
+            <td><input type="text" name="start_time"  value=""/></td>
         </tr>
         <tr>
         	<td width="30%">end_time(结束时间，type=2,3时填写，时间戳)</td>
-            <td><input type="text" name="remind_time"  value=""/></td>
+            <td><input type="text" name="end_time"  value=""/></td>
         </tr>
         <tr>
         	<td width="30%">free_time(空余时间，type=3时填写，[{"start_time":"时间戳","end_time":"时间戳"}])</td>
-            <td><input type="text" name="remind_time"  value=""/></td>
+            <td><input type="text" name="free_time"  value=""/></td>
         </tr>
         <tr>
         	<td width="30%">remind_time(提醒时间，type=2,3时填写,时间戳)</td>
