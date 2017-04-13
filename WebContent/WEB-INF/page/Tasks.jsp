@@ -100,10 +100,18 @@
         <tr>
         	<td width="30%">schedule_type(日程时间类型 ：0-确定/1-待定)</td>
             <td><input type="text" name="schedule_type"  value="0"/></td>
-        </tr>  
+        </tr>
+         <tr>
+        	<td width="30%">start_time(开始时间,格式yyyy/MM/dd HH:mm:ss)</td>
+            <td><input type="text" name="start_time"  value="2017/03/21 12:12:00"/></td>
+        </tr>
+         <tr>
+        	<td width="30%">end_time(结束时间,格式yyyy/MM/dd HH:mm:ss)</td>
+            <td><input type="text" name="end_time"  value="2017/03/21 12:12:00"/></td>
+        </tr>
         <tr>
-        	<td width="30%">time_range(时间范围，格式：schedule_type为0时,2017/03/21 03:18:00,2017/03/12 18:10:00。schedule_type为1时,2017/03/21,07:00-08:10|09:10-10:32)</td>
-            <td><input type="text" name="time_range"  value="2017/03/21 13:18:00,2017/03/12 15:10:00"/></td>
+        	<td width="30%">time_range(空余时间，07:00-08:10|09:10-10:32)</td>
+            <td><input type="text" name="time_range"  value="07:00-08:10|09:10-10:32"/></td>
         </tr>
          <tr>
         	<td width="30%">expect_time(预计时间)</td>
