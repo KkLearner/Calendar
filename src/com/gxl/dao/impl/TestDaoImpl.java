@@ -31,7 +31,13 @@ public class TestDaoImpl extends BaseDaoImpl<Test> implements TestDao {
 		try {
 			Test test=getById(1);
 		Session session=sessionFactory.getCurrentSession();
-			Transaction tx=session.beginTransaction();
+		Transaction tx;
+		    if (session.getTransaction() != null
+		            && session.getTransaction().isActive()) {
+		        tx = session.getTransaction();
+		    } else {
+		        tx = session.beginTransaction();
+		    }	
 			test.setBirthday(new Date());
 			session.update(test);
 			tx.commit();

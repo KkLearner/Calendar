@@ -29,7 +29,13 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 	public List<Map<String, Object>> getTodayAllTask(String what,Integer userid,String date){
 		List<Map<String, Object>> list=null;
 		Session session=sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		try {
 			//根据用户id和日期再表gxl_task查找当天的日程和待办
 			list=session.createSQLQuery("select "+what
@@ -54,7 +60,13 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 		Map<String, Object> data = new HashMap<String, Object>();
 		List<HashMap<String, Object>> invitees = new ArrayList<HashMap<String, Object>>();
 		Session session=sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();				
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }					
 		try {
 			
 			map = (Map<String, Object>) session.createSQLQuery("select *"
@@ -125,7 +137,13 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 		Map<String, Object> map=null;	
 		Map<String, Object> data = new HashMap<String, Object>();		
 		Session session=sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();		
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }		
 		try {
 			
 			map = (Map<String, Object>) session.createSQLQuery("select *"
@@ -166,7 +184,13 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 	@Override
 	public void copyTask(Integer userid, Integer taskid) {		
 		Session session=sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();		
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }		
 		try {
 			
 			session.createSQLQuery("INSERT into gxl_task"

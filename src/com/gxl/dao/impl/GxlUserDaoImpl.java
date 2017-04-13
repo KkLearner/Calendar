@@ -17,7 +17,13 @@ public class GxlUserDaoImpl extends BaseDaoImpl<GxlUser> implements GxlUserDao {
 	private Map<String, Object> share(String what,Integer userid) {
 		Map<String, Object> tMap=null;
 		Session session=sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }
 		try {
 			String sql="select "+what
 					+ " from gxl_user as a "

@@ -19,7 +19,13 @@ public class CardCollectionDaoImpl extends BaseDaoImpl<CardCollection> implement
 	public List<Map<String, Object>> shareCardHolders(Integer userid) {
 		List<Map<String, Object>> list=null;
 		Session session=sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		try {
 			String sql="select a.nickname as name,a.partnership_name as category,a.partnership_detail as company "
 					+ "from gxl_user as a,card_collection as b "
