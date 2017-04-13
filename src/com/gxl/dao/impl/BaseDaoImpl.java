@@ -98,7 +98,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public void add(T t) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		try{
 			session.save(t);
 			tx.commit();
@@ -114,7 +120,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 		if(condition==null||condition.isEmpty())
 			return false;
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		try{
 			StringBuffer colN=new StringBuffer("");
 			StringBuffer colV=new StringBuffer("");
@@ -151,7 +163,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public void delete(T t) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();	
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		try{
 			session.delete(t);
 			tx.commit();
@@ -167,7 +185,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 		if(condition==null||condition.isEmpty())
 			return;
 		Session session=sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		try{
 			String sql="delete from "+tableName+" where ";
 			StringBuffer v=new StringBuffer("");
@@ -211,7 +235,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public boolean update(Map<String,Object> values,Map<String, Object> condition){
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		boolean ok=true;
 		try{
 			StringBuffer v=new StringBuffer("");
@@ -256,9 +286,9 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public T getByIdWithoutDel(Integer id) {
-		Session session = sessionFactory.getCurrentSession();
-		Transaction tx;
+		Session session = sessionFactory.getCurrentSession();	
 		T t = null;
+		Transaction tx;
 	    if (session.getTransaction() != null
 	            && session.getTransaction().isActive()) {
 	        tx = session.getTransaction();
@@ -304,7 +334,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@SuppressWarnings("unchecked")
 	public T getByLId(Long id) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();	
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		T t=null;
 		try{
 			t = (T)session.get(this.clazz, id);
@@ -385,7 +421,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public List<T> getByCriterion(Criterion criterion) {
 		Session session=sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		Criteria cri=session.createCriteria(clazz);
 		cri.add(criterion);
 		List<T> list=cri.list();
@@ -455,7 +497,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public int getTotalRecords() {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		int records=0;
 		try{
 			Query q = session.createQuery("select count(*) from " + entityName);
@@ -471,7 +519,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public List<T> find(final String hql, Object...values) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		List<T> list=new ArrayList<>();		
 		try{
 			Query query = session.createQuery(hql);
@@ -515,7 +569,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 		if(value == null)
 			return null;
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		T t = null;
 		try{
 			Query query = session.createQuery("from " + entityName +" bean where bean." + prop +" = :value");
@@ -568,7 +628,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public int countByHQL(String hql){
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		int count=0;
 		try{
 			count = ((Number)session.createQuery(hql).uniqueResult()).intValue();
@@ -584,7 +650,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public void executeHQL(final String hql){
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		try{
 			session.createQuery(hql).executeUpdate();
 			tx.commit();
@@ -598,7 +670,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public void insert(final List<T> ts){
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		try{
 			for(int i = 0; i < ts.size(); i ++){
 				session.save(ts.get(i));
@@ -640,7 +718,13 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public List<T> findBySQL(String sql){
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		List<T> list=new ArrayList<>();
 		try{
 			list = session.createSQLQuery(sql)
