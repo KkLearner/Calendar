@@ -135,7 +135,7 @@
             <td><input type="text" name="content"  value="有问题"/></td>
         </tr>
         <tr>
-        	<td width="30%">images(base64码的数组)</td>
+        	<td width="30%">images(图片文件组)</td>
             <td><input type="file" name="images"  value="" multiple /></td>
         </tr>  
         <tr>
