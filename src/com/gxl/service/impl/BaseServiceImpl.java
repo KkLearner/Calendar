@@ -124,7 +124,6 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 		return this.dao.findByUniqueProperty(prop, value);
 	}
 
-	
 
 	@Override
 	public T findUniqueByCriteria(Criteria criteria) {
@@ -180,7 +179,4 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 		return this.dao.findTotalByUniqueProperty(key, value);
 	}
 
-	@Override
-	public void copyTask(Integer userid, Integer taskid) {
-	}
 }

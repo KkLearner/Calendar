@@ -94,25 +94,17 @@
             <td><input type="text" name="address"  value=""/></td>
         </tr> 
         <tr>
-        	<td width="30%">remind_time(提醒时间,时间戳)</td>
-            <td><input type="text" name="remind_time"  value=""/></td>
+        	<td width="30%">remind_time(提醒时间,格式yyyy/MM/dd HH:mm:ss)</td>
+            <td><input type="text" name="remind_time"  value="2017/03/21 12:12:00"/></td>
         </tr>
         <tr>
         	<td width="30%">schedule_type(日程时间类型 ：0-确定/1-待定)</td>
             <td><input type="text" name="schedule_type"  value="0"/></td>
-        </tr> 
-         <tr>
-        	<td width="30%">start_time(开始时间,时间戳)</td>
-            <td><input type="text" name="start_time"  value=""/></td>
-        </tr>
-         <tr>
-        	<td width="30%">end_time(结束时间,时间戳)</td>
-            <td><input type="text" name="end_time"  value=""/></td>
-        </tr>
-        <tr>
-        	<td width="30%">free_time(空余时间,09:00-10:00|12:00-23:11)</td>
-            <td><input type="text" name="free_time"  value=""/></td>
         </tr>  
+        <tr>
+        	<td width="30%">time_range(时间范围，格式：schedule_type为0时,2017/03/21 03:18:00,2017/03/12 18:10:00。schedule_type为1时,2017/03/21,07:00-08:10|09:10-10:32)</td>
+            <td><input type="text" name="time_range"  value="2017/03/21 13:18:00,2017/03/12 15:10:00"/></td>
+        </tr>
          <tr>
         	<td width="30%">expect_time(预计时间)</td>
             <td><input type="text" name="expect_time"  value="1小时"/></td>
@@ -134,31 +126,23 @@
         <tr>
         <tr>
         	<td width="30%">taskid(邀请id 必填)</td>
-            <td><input type="text" name="taskid"  value="33"/></td>
+            <td><input type="text" name="taskid"  value="14"/></td>
         </tr>
         <tr>
         	<td width="30%">invitee(被邀请人id 必填)</td>
-            <td><input type="text" name="invitee"  value="3"/></td>
+            <td><input type="text" name="invitee"  value="2"/></td>
         </tr> 
         <tr>
         	<td width="30%">type(邀请回复（1：拒绝/2：接受并确定/3：接受并待定） 必填)</td>
             <td><input type="text" name="type"  value="2"/></td>
         </tr> 
         <tr>
-        	<td width="30%">start_time(开始时间，type=2,3时填写,时间戳)</td>
-            <td><input type="text" name="start_time"  value=""/></td>
+        	<td width="30%">time_range_accept(时间范围，格式：type=2,2017/03/21 03:18:00,2017/03/12 18:10:00。type=3时,2017/03/21,07:00-08:10|09:10-10:32)</td>
+            <td><input type="text" name="time_range_accept"  value="2017/03/21 13:18:00,2017/03/12 15:10:00"/></td>
         </tr>
         <tr>
-        	<td width="30%">end_time(提醒时间，type=2,3时填写,时间戳)</td>
-            <td><input type="text" name="end_time"  value=""/></td>
-        </tr>
-        <tr>
-        	<td width="30%">free_time(空余时间， type=3时填写， json数组[{"start_time":时间戳,"end_time":时间戳}])</td>
-            <td><input type="text" name="time_range_accept"  value=""/></td>
-        </tr>
-        <tr>
-        	<td width="30%">remind_time(提醒时间，type=2,3时填写,时间戳)</td>
-            <td><input type="text" name="remind_time"  value=""/></td>
+        	<td width="30%">remind_time(提醒时间，type=2,3时填写)</td>
+            <td><input type="text" name="remind_time"  value="2017/03/21 19:00:00"/></td>
         </tr>
         <tr>
         	<td width="30%">refuse(拒绝理由 type=1时填写)</td>
@@ -170,29 +154,14 @@
     </table>
 </form>
 
-<form action="/Calendar/Task/GetAppInvitation" method="POST">
+<form action="/Calendar/Task/GetInvitation" method="POST">
 	<table width="500px" border="1px #FFFFFF soild">
     	<tr>
-        	<th colspan="2" align="left">通过id获取邀请信息(App使用)  GetAppInvitation</th>
+        	<th colspan="2" align="left">通过id获取邀请信息  GetInvitation</th>
         <tr>
         <tr>
         	<td width="30%">invite_id(邀请id 必填)</td>
-            <td><input type="text" name="invite_id"  value="33"/></td>
-        </tr>
-        <tr>
-        	<td colspan="2" align="left"><input type="submit" value="go"/> </td>
-        <tr>
-    </table>
-</form>
-
-<form action="/Calendar/Task/GetWebInvitation" method="GET">
-	<table width="500px" border="1px #FFFFFF soild">
-    	<tr>
-        	<th colspan="2" align="left">通过id获取邀请信息(Web使用)  GetWebInvitation</th>
-        <tr>
-        <tr>
-        	<td width="30%">invite_id(邀请id 必填)</td>
-            <td><input type="text" name="invite_id"  value="33"/></td>
+            <td><input type="text" name="invite_id"  value="27"/></td>
         </tr>
         <tr>
         	<td colspan="2" align="left"><input type="submit" value="go"/> </td>

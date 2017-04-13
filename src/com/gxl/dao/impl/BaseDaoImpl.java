@@ -282,8 +282,14 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@SuppressWarnings("unchecked")
 	public T getById(Integer id) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();
-		T t=null;
+		Transaction tx;
+		T t = null;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }
 		try{
 			t = (T)session.get(this.clazz, id);
 			tx.commit();
@@ -313,7 +319,14 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public Map<String, Object> getByIdRMap(Object id){
 		Session session=sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();
+		Transaction tx;
+		T t = null;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		Map<String, Object> entity=null;
 		try {
 			entity=(Map<String, Object>)session.createSQLQuery("select * from "+tableName+" where id="+id)
@@ -328,7 +341,14 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@SuppressWarnings("unchecked")
 	public List<T> getAll() {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
+		Transaction tx;
+		T t = null;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		List l = new ArrayList<T>();
 		try{
 			Query query = session.createQuery("from " + entityName);
@@ -344,7 +364,14 @@ public abstract class BaseDaoImpl<T> implements com.gxl.dao.BaseDao<T> {
 	@Override
 	public List<T> getByCriterion(Criterion... criterions) {
 		Session session=sessionFactory.getCurrentSession();
-		Transaction tx=session.beginTransaction();
+		Transaction tx;
+		T t = null;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }	
 		Criteria criteria=session.createCriteria(clazz);
 		for(Criterion criterion : criterions){
 			criteria.add(criterion);

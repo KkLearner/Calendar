@@ -7,7 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 
 import com.gxl.common.page.Page;
-import com.gxl.response.ModifyInfoResponse;
+
 
 public interface BaseService<T> {
 
@@ -71,7 +71,5 @@ public interface BaseService<T> {
 	
 	public Object getTopValueByParam(String param);
 	
-	public Integer findTotalByUniqueProperty(String key,Object value);
-
-	public void copyTask(Integer userid, Integer taskid);
+	public Integer findTotalByUniqueProperty(String key,Object value);	
 }

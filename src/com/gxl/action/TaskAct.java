@@ -298,11 +298,12 @@ public class TaskAct {
 	@CrossOrigin(origins="*",maxAge=3600)
 	@ResponseBody
 	@RequestMapping(value="/GetInvitationInfo",method=RequestMethod.GET, headers="Accept=application/json")
-	public String getInvitationInfo(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {		
-		try {									
-			return (JSONObject.fromObject(gxlTaskService.getInviteInfo(Integer.valueOf((String)map.get("taskid")))).toString());
+	public Map<String,Object> getInvitationInfo(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {		
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {							
+			return  ResultReturn.setJson(result, 0, "success", gxlTaskService.getInviteInfo(Integer.valueOf((String)map.get("taskid"))));
 		}catch(Exception exception){			
-			return "{msg:\"Server error\", error:2}";
+			return ResultReturn.setJson(result, 3, "false", null);
 		}
 		
 	}
@@ -310,11 +311,12 @@ public class TaskAct {
 	@CrossOrigin(origins="*",maxAge=3600)
 	@ResponseBody
 	@RequestMapping(value="/GetModifyInfo",method=RequestMethod.GET, headers="Accept=application/json")
-	public String GetModifyInfo(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {		
-		try {						
-			return (JSONObject.fromObject(gxlTaskService.getModifyInfo(Integer.valueOf((String)map.get("taskid")))).toString());
+	public Map<String, Object> GetModifyInfo(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {		
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {							
+			return  ResultReturn.setJson(result, 0, "success", gxlTaskService.getModifyInfo(Integer.valueOf((String)map.get("taskid"))));
 		}catch(Exception exception){			
-			return "{msg:\"Server error\", error:2}";
+			return ResultReturn.setJson(result, 3, "false", null);
 		}
 	}
 		
