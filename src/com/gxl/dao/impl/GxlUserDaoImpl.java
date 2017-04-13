@@ -22,7 +22,8 @@ public class GxlUserDaoImpl extends BaseDaoImpl<GxlUser> implements GxlUserDao {
 			String sql="select "+what
 					+ " from gxl_user as a "
 					+ " where a.if_del=0 and a.gxlid="+userid;
-			tMap=(Map<String, Object>)session.createSQLQuery(sql).setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP).uniqueResult();			
+			tMap=(Map<String, Object>)session.createSQLQuery(sql).setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP).uniqueResult();
+			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -41,7 +41,7 @@ public class GxlUser implements java.io.Serializable{
 	@Column(name="city")
 	private String city;
 	
-	@Column(name="[code]")
+	@Column(name="code")
 	private String code;
 	
 	@Column(name="birthday")

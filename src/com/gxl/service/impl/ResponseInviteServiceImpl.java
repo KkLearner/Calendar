@@ -69,7 +69,9 @@ public class ResponseInviteServiceImpl extends BaseServiceImpl<ResponseInvite> i
 				Integer t=responseInvite.getType();
 				teMap.put("type", t);
 				String refuse=null;
-				String time_horizon=null;
+				java.util.Date start_time=null;
+				java.util.Date end_time=null;
+				String free_time="";
 				java.util.Date inform_time=null;
 				switch (t) {
 				case 0://默认，未回复
@@ -77,22 +79,22 @@ public class ResponseInviteServiceImpl extends BaseServiceImpl<ResponseInvite> i
 				case 1://拒绝
 					refuse=responseInvite.getRefuse();
 					break;
-				case 2://接受并确定
-					sf.applyPattern("yyyy/MM/dd HH:mm:ss");
+				case 2:case 3://接受并待定//接受并确定
+					start_time=responseInvite.getStart_time();
+					end_time=responseInvite.getEnd_time();
 					inform_time=responseInvite.getRemind_time();
-					time_horizon=sf.format(responseInvite.getStart_time())+","+sf.format(responseInvite.getEnd_time());
-					break;
-				case 3://接受并待定
-					sf.applyPattern("yyyy/MM/dd");
-					inform_time=responseInvite.getRemind_time();
-					time_horizon=sf.format(responseInvite.getStart_time())+","+responseInvite.getFree_time();
+					if(t==3){
+						free_time=responseInvite.getFree_time();
+					}
 					break;
 				default:
 					break;
 				}
 				teMap.put("content", refuse);
-				teMap.put("time_horizon", time_horizon);
+				teMap.put("start_time", start_time);
+				teMap.put("end_time", end_time);
 				teMap.put("inform_time", inform_time);
+				teMap.put("free_time", free_time);
 				invitee.add(teMap);
 			}
 		} catch (Exception e) {

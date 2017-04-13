@@ -147,7 +147,7 @@ public class ShareAct {
 			ResultReturn.setJson(result, 0, "success", data);
 		}catch(Exception exception){
 			exception.printStackTrace();
-			ResultReturn.setJson(result, 2, "false",null);
+			ResultReturn.setJson(result, 2, exception.getMessage(),null);
 		}
 		return result;
 	}
