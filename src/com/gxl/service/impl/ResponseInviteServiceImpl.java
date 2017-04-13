@@ -61,7 +61,7 @@ public class ResponseInviteServiceImpl extends BaseServiceImpl<ResponseInvite> i
 			SimpleDateFormat sf=new SimpleDateFormat();
 			for(String invited:users){
 				Map<String, Object> teMap=new HashMap<>();
-				List<ResponseInvite> responseInvites=responseInviteDao.getByCriterion(Restrictions.eq("taskid", taskid),Restrictions.eq("invitee", invited));
+				List<ResponseInvite> responseInvites=responseInviteDao.getByCriterion(Restrictions.eq("taskid", taskid),Restrictions.eq("invitee",Integer.valueOf(invited)));
 				if(responseInvites==null||responseInvites.isEmpty())
 					continue;
 				teMap.put("Invitee_id", invited);
