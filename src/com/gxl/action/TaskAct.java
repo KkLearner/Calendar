@@ -211,10 +211,10 @@ public class TaskAct {
 				String free_time="";
 				if(type==3){
 					SimpleDateFormat sf=new SimpleDateFormat("HH:mm");
-					List<Map<String, Object>> array=(List<Map<String, Object>>)JSONArray.fromObject((String)map.get("free_time"));
+					List<Map<String, Long>> array=(List<Map<String, Long>>)JSONArray.fromObject(map.get("free_time"));
 					StringBuffer buffer=new StringBuffer("");
-					for(Map<String, Object> temp:array)
-						buffer.append(sf.format(new java.util.Date(Long.valueOf((String)temp.get("start_time"))))+"-"+sf.format(new java.util.Date(Long.valueOf((String)temp.get("end_time"))))+"|");
+					for(Map<String, Long> temp:array)
+						buffer.append(sf.format(new java.util.Date(temp.get("start_time")))+"-"+sf.format(new java.util.Date(temp.get("end_time")))+"|");
 					free_time=buffer.substring(0, buffer.length()-1);
 					responseInvite.setFree_time(free_time);
 				}
