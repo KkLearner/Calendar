@@ -131,7 +131,7 @@ public class TaskAct {
 			GxlTask task=new GxlTask(userid, 0, "待办", 
 					(String)map.get("title"), (String)map.get("address"), "", uDate,
 					sf.parse((String)map.get("end_time")), sf.parse((String)map.get("remind_time")), "", "", "", 
-					0, uDate);
+					0, uDate,"");
 			gxlTaskService.add(task);
 			result.put("taskid", task.getId());
 			return ResultReturn.setMap(result, 0, "success", null);
@@ -167,9 +167,12 @@ public class TaskAct {
 				return ResultReturn.setMap(result, 2, "no this schedule_type", null);
 			}
 			String invites=(String)map.get("invited_userid");
+			Integer if_del=0;
+			if(!invites.trim().equals(""))//当有邀请别人时，要对方接受了才可以设置if_del=0
+				if_del=1;
 			GxlTask task=new GxlTask(id, schedule_type+1, typeList.get(schedule_type+1), (String)map.get("title"), 
 					(String)map.get("address"), invites, start_time, end_time, sf.parse((String)map.get("remind_time")), free_time,
-					(String)map.get("expect_time"), (String)map.get("remark"), 0,new java.util.Date() );
+					(String)map.get("expect_time"), (String)map.get("remark"), if_del,new java.util.Date(),"");
 			gxlTaskService.add(task);
 			result.put("taskid", task.getId());
 			if(!invites.trim().equals(""))
@@ -178,7 +181,7 @@ public class TaskAct {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.clear();
-			return ResultReturn.setMap(result, 5, "false", null);
+			return ResultReturn.setMap(result, 5, e.getMessage(), null);
 		}
 	}
 	
@@ -205,7 +208,7 @@ public class TaskAct {
 			case 1://拒绝
 				responseInvite.setRefuse((String)map.get("refuse"));
 				break;
-			case 2:case 3://接受
+			case 2:case 3://接受			
 				start_time=new java.util.Date(Long.valueOf((String)map.get("start_time")));
 				end_time=new java.util.Date(Long.valueOf((String)map.get("end_time")));
 				String free_time="";
@@ -234,7 +237,7 @@ public class TaskAct {
 			return ResultReturn.setMap(result, 0, "success", null);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResultReturn.setMap(result, 4, "false", null);
+			return ResultReturn.setMap(result, 4, e.getMessage(), null);
 		}
 	}
 	

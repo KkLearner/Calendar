@@ -193,20 +193,18 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 	        tx = session.beginTransaction();
 	    }		
 		try {
-			
-			session.createSQLQuery("INSERT into gxl_task"
-					+ "(userid,type_id,type_name,title,address,start_time,end_time,free_time,expect_time,remark,remind_time,uDate)"
-					+ " select :userid,type_id,type_name,title,address,:start_time,:end_time,:free_time,expect_time,remark,:remind_time,now() "
-					+ " from gxl_task "
-					+ " where id=:taskid and if_del=0 ")
-					.setInteger("userid", userid)
-					.setInteger("taskid", taskid)
-					.setDate("start_time", start_time)
-					.setDate("end_time", end_time)
-					.setDate("remind_time", remind_time)
-					.setString("free_time", free_time)
-					.executeUpdate();			
-								
+			Date uDate=new Date();
+			GxlTask task=(GxlTask)session.get(GxlTask.class, taskid);
+			if(task.getIf_del()==1){
+				task.setIf_del(0);				
+				task.setuDate(uDate);
+				session.update(task);
+			}
+			GxlTask newTask=new GxlTask(userid, task.getType_id(), task.getType_name(),
+					task.getTitle(), task.getAddress(), "", 
+					start_time, end_time, remind_time, free_time,
+					task.getExpect_time(), task.getRemark(), 0,uDate,"");
+			session.save(newTask);
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();		

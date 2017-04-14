@@ -50,7 +50,7 @@ public class ResponseInviteServiceImpl extends BaseServiceImpl<ResponseInvite> i
 		}catch (Exception e) {
 			e.printStackTrace();
 			result.clear();
-			return ResultReturn.setMap(result, 5, "false", null);
+			return ResultReturn.setMap(result, 5, e.getMessage(), null);
 		}
 	}
 

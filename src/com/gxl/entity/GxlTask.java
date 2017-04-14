@@ -57,7 +57,7 @@ public class GxlTask implements java.io.Serializable{
 	private String expect_time;
 	
 	@Column(name="modify_reason")
-	private String editReason;
+	private String modify_reason;
 	
 	@Column(name="remark")
 	private String remark;
@@ -71,7 +71,7 @@ public class GxlTask implements java.io.Serializable{
 
 	public GxlTask(Integer id, Integer userid, Integer type_id, String type_name,String title, String address,
 			String invited_userid, Date start_time, Date end_time,Date remind_time,
-			String free_time, String expect_time, String remark, Integer if_del, Date uDate) {
+			String free_time, String expect_time, String remark, Integer if_del, Date uDate,String modify_reason) {
 		super();
 		this.id = id;
 		this.userid = userid;
@@ -88,11 +88,12 @@ public class GxlTask implements java.io.Serializable{
 		this.remark = remark;
 		this.if_del = if_del;
 		this.uDate = uDate;
+		this.modify_reason=modify_reason;
 	}
 
 	public GxlTask(Integer userid, Integer type_id, String type_name,String title, String address,
 			String invited_userid, Date start_time, Date end_time,Date remind_time,
-			String free_time, String expect_time, String remark, Integer if_del, Date uDate) {
+			String free_time, String expect_time, String remark, Integer if_del, Date uDate,String modify_reason) {
 		super();
 		this.userid = userid;
 		this.type_id = type_id;
@@ -108,6 +109,7 @@ public class GxlTask implements java.io.Serializable{
 		this.remark = remark;
 		this.if_del = if_del;
 		this.uDate = uDate;
+		this.modify_reason=modify_reason;
 	}
 
 	public GxlTask() {
@@ -209,15 +211,7 @@ public class GxlTask implements java.io.Serializable{
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-
-	public String getEditReason() {
-		return editReason;
-	}
-
-	public void setEditReason(String editReason) {
-		this.editReason = editReason;
-	}
-
+	
 	public Integer getIf_del() {
 		return if_del;
 	}
@@ -240,6 +234,15 @@ public class GxlTask implements java.io.Serializable{
 
 	public void setRemind_time(Date remind_time) {
 		this.remind_time = remind_time;
+	}
+
+	public String getModify_reason() {
+		return modify_reason;
+	}
+
+	public void setModify_reason(String modify_reason) {
+		this.modify_reason = modify_reason;
 	}	
+	
 	
 }
