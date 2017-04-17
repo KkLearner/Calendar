@@ -52,10 +52,11 @@ public class GxlUserAct {
 			ResponseWrapper wrapper=imApiUtils.createIMUserSingle(account,(String)map.get("password") ,(String)map.get("nickname"));
 			if(wrapper.hasError())
 				return ResultReturn.setMap(result, 2, wrapper.toString(), null);
-			map.put("IM_name", account);
-			map.put("id", user.getGxlid());
-			map.put("uDate", new Date());
+			map.put("IM_name", account);			
+			map.put("uDate", new Date());			
 			gxlUserService.add(map);
+			user=gxlUserService.findByUniqueProperty("gxl_account", account);
+			result.put("id", user.getGxlid());//id
 			return ResultReturn.setMap(result, 0, "success", null);
 		} catch (Exception e) {
 			e.printStackTrace();
