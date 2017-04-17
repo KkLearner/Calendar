@@ -53,6 +53,7 @@ public class GxlUserAct {
 			if(wrapper.hasError())
 				return ResultReturn.setMap(result, 2, wrapper.toString(), null);
 			map.put("IM_name", account);
+			map.put("id", user.getGxlid());
 			map.put("uDate", new Date());
 			gxlUserService.add(map);
 			return ResultReturn.setMap(result, 0, "success", null);
@@ -86,6 +87,7 @@ public class GxlUserAct {
 			result.put("sex", user.getSex());//性别
 			result.put("head_imag", user.getHead_img());//头像
 			result.put("nick_name", user.getNickname());//昵称
+			result.put("id", user.getGxlid());//id
 			//result.put("QR_code", user.getQr_code());//二维码
 			result.put("area", user.getAddress());//地址
 			result.put("signature", user.getSignature());//个人签名		
