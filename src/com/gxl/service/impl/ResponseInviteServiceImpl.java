@@ -32,12 +32,6 @@ public class ResponseInviteServiceImpl extends BaseServiceImpl<ResponseInvite> i
 		try{
 			String []invited=invitees.split(",");
 			for(String use:invited){//给每个被邀请者发送邀请
-				List<GxlFriends> friends=gxlFriendsDao.getByCriterion(Restrictions.eq("user_id", userid),
-						Restrictions.eq("friend_id", Integer.valueOf(use)));
-				if(friends==null||friends.isEmpty())
-					return ResultReturn.setMap(result, 3, "no this "+use+" id", null);
-				else if(friends.get(0).getIf_del()==1)
-					return ResultReturn.setMap(result, 4, "you have't this friend's "+use, null);
 				Map<String, Object> temp=new HashMap<>();
 				temp.put("taskid", taskid);
 				temp.put("invitee", use);
@@ -50,7 +44,7 @@ public class ResponseInviteServiceImpl extends BaseServiceImpl<ResponseInvite> i
 		}catch (Exception e) {
 			e.printStackTrace();
 			result.clear();
-			return ResultReturn.setMap(result, 5, e.getMessage(), null);
+			return ResultReturn.setMap(result, 3, e.getMessage(), null);
 		}
 	}
 

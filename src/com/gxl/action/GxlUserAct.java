@@ -2,6 +2,7 @@ package com.gxl.action;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,10 +50,17 @@ public class GxlUserAct {
 			GxlUser user=gxlUserService.findByUniqueProperty("gxl_account", account);
 			if(user!=null&&user.getIf_del()==0)//已经被注册
 				return ResultReturn.setMap(result, 1, "this account has been registered", null);
-			ResponseWrapper wrapper=imApiUtils.createIMUserSingle(account,(String)map.get("password") ,(String)map.get("nickname"));
+			int length=account.length();
+			for(int i=0;i<length;++i){
+				char s=account.charAt(i);
+				if(s>127)
+					return ResultReturn.setMap(result, 2, "account is only ascii", null);
+			}
+			String imaccount=new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+Math.random();
+			ResponseWrapper wrapper=imApiUtils.createIMUserSingle(imaccount,(String)map.get("password") ,(String)map.get("nickname"));
 			if(wrapper.hasError())
-				return ResultReturn.setMap(result, 2, wrapper.toString(), null);
-			map.put("IM_name", account);			
+				return ResultReturn.setMap(result,3, wrapper.toString(), null);
+			map.put("IM_name", imaccount);			
 			map.put("uDate", new Date());			
 			gxlUserService.add(map);
 			user=gxlUserService.findByUniqueProperty("gxl_account", account);
@@ -61,11 +69,11 @@ public class GxlUserAct {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.clear();
-			return ResultReturn.setMap(result, 3, "false", null);
+			return ResultReturn.setMap(result, 4, e.getMessage(), null);
 		}
 	}
 		
-	//验证账号密码是否通过，获取用户基本信息
+	//验证账号密码是否通过
 	//表 gxl_user
 	@ResponseBody
 	@RequestMapping(value="/Login",method=RequestMethod.POST,headers="Accept=application/json")
@@ -79,27 +87,47 @@ public class GxlUserAct {
 				return ResultReturn.setMap(result, 1, "no this user", null);
 			if(!user.getPassword().equals((String)map.get("password")))//比较密码
 				return ResultReturn.setMap(result, 2, "password is not correct", null);
-			ResponseWrapper wrapper=imApiUtils.checkIMUserOnline(account);
+			ResponseWrapper wrapper=imApiUtils.checkIMUserOnline(user.getIm_name());
 			if(wrapper.hasError())
 				return ResultReturn.setMap(result, 3, wrapper.toString(), null);
 			JsonNode data=((ObjectNode)wrapper.getResponseBody()).get("data");
 			if(data.get(account).asText().equals("online"))
 				return ResultReturn.setMap(result, 4, "you have logined,please don't login again" , null);
+			result.put("id", user.getGxlid());//id	
+			return ResultReturn.setMap(result, 0, "success", null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.clear();
+			return ResultReturn.setMap(result, 4, e.getMessage(), null);
+		}
+	}
+	
+	//验证账号获取用户基本信息
+	//表 gxl_user
+	@ResponseBody
+	@RequestMapping(value="/GetUserInfoByAccount",method=RequestMethod.POST,headers="Accept=application/json")
+	public Map<String,Object> getUserInfoByAccount(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
+		Map<String,Object> result=new HashMap<String,Object>();
+		try {
+			//通过账号在表gxl_user中查找该用户
+			String account=(String)map.get("account");
+			GxlUser user=gxlUserService.findByUniqueProperty("gxl_account",account );
+			if(user==null||user.getIf_del()==1)//没有查到或者已标记删除
+				return ResultReturn.setMap(result, 1, "no this user", null);
 			result.put("sex", user.getSex());//性别
 			result.put("head_imag", user.getHead_img());//头像
 			result.put("nick_name", user.getNickname());//昵称
 			result.put("id", user.getGxlid());//id
-			//result.put("QR_code", user.getQr_code());//二维码
 			result.put("area", user.getAddress());//地址
 			result.put("signature", user.getSignature());//个人签名		
 			return ResultReturn.setMap(result, 0, "success", null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.clear();
-			return ResultReturn.setMap(result, 4, "false", null);
+			return ResultReturn.setMap(result, 2, e.getMessage(), null);
 		}
 	}
-	
+		
 	//修改密码
 	//表 gxl_user
 	@ResponseBody

@@ -50,7 +50,7 @@
 <form action="/Calendar/GxlUser/Login" method="POST">
 	<table width="500px" border="1px #FFFFFF soild">
     	<tr>
-        	<th colspan="2" align="left">验证账号密码是否通过，获取用户基本信息  Login</th>
+        	<th colspan="2" align="left">验证账号密码是否通过  Login</th>
         <tr>
         <tr>
         	<td width="30%">account(账号  必填)</td>
@@ -60,6 +60,21 @@
         	<td width="30%">password(密码 必填)</td>
             <td><input type="text" name="password"  value="123456"/></td>
         </tr>    
+        <tr>
+        	<td colspan="2" align="left"><input type="submit" value="go"/> </td>
+        <tr>
+    </table>
+</form>
+
+<form action="/Calendar/GxlUser/GetUserInfoByAccount" method="POST">
+	<table width="500px" border="1px #FFFFFF soild">
+    	<tr>
+        	<th colspan="2" align="left">验证账号获取用户基本信息  GetUserInfoByAccount</th>
+        <tr>
+        <tr>
+        	<td width="30%">account(账号  必填)</td>
+            <td><input type="text" name="account"  value="121024"/></td>
+        </tr>  
         <tr>
         	<td colspan="2" align="left"><input type="submit" value="go"/> </td>
         <tr>

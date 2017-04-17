@@ -170,8 +170,12 @@ public class TaskAct {
 			Integer if_del=0;
 			if(!invites.trim().equals(""))//当有邀请别人时，要对方接受了才可以设置if_del=0
 				if_del=1;
+			String rtime=(String)map.get("remind_time");
+			java.util.Date remind_time=null;
+			if(rtime!=null&&!rtime.equals(""))
+				remind_time=sf.parse(rtime);		
 			GxlTask task=new GxlTask(id, schedule_type+1, typeList.get(schedule_type+1), (String)map.get("title"), 
-					(String)map.get("address"), invites, start_time, end_time, sf.parse((String)map.get("remind_time")), free_time,
+					(String)map.get("address"), invites, start_time, end_time,remind_time , free_time,
 					(String)map.get("expect_time"), (String)map.get("remark"), if_del,new java.util.Date(),"");
 			gxlTaskService.add(task);
 			result.put("taskid", task.getId());
@@ -181,7 +185,7 @@ public class TaskAct {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.clear();
-			return ResultReturn.setMap(result, 5, e.getMessage(), null);
+			return ResultReturn.setMap(result, 3, e.getMessage(), null);
 		}
 	}
 	
@@ -302,6 +306,7 @@ public class TaskAct {
 		}
 	}
 	
+	//获取邀请信息（web端）
 	@CrossOrigin(origins="*",maxAge=3600)
 	@ResponseBody
 	@RequestMapping(value="/GetInvitationInfo",method=RequestMethod.GET, headers="Accept=application/json")
@@ -315,6 +320,7 @@ public class TaskAct {
 		
 	}
 	
+	//获取日程修改信息（web端）
 	@CrossOrigin(origins="*",maxAge=3600)
 	@ResponseBody
 	@RequestMapping(value="/GetModifyInfo",method=RequestMethod.GET, headers="Accept=application/json")
@@ -324,6 +330,31 @@ public class TaskAct {
 			return  ResultReturn.setJson(result, 0, "success", gxlTaskService.getModifyInfo(Integer.valueOf((String)map.get("taskid"))));
 		}catch(Exception exception){			
 			return ResultReturn.setJson(result, 3, exception.getMessage(), null);
+		}
+	}
+	
+	//修改日程
+	@ResponseBody
+	@RequestMapping(value="/ModifyTaskInfo",method=RequestMethod.POST, headers="Accept=application/json")
+	public Map<String, Object> modifyTaskInfo(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {		
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {			
+			Integer taskid=Integer.valueOf((String)map.remove("taskid"));
+			GxlTask task=gxlTaskService.getByIdWithoutDel(taskid);
+			if(task==null)
+				return ResultReturn.setMap(result, 1, "no this taskid", null);
+			String rtime=(String)map.get("remind_time");
+			if(rtime==null||rtime.equals(""))
+				map.replace("remind_time",null);
+			Map<String, Object> condition=new HashMap<>();
+			map.put("type_name", typeList.get(Integer.valueOf((String)map.get("type_id"))));
+			map.put("uDate", new java.util.Date());
+			condition.put("id", taskid);
+			if(gxlTaskService.update(map, condition))
+				return  ResultReturn.setMap(result, 0, "success", null);
+			return  ResultReturn.setMap(result, 3, "false", null);
+		}catch(Exception exception){			
+			return ResultReturn.setMap(result, 2, exception.getMessage(), null);
 		}
 	}
 		
