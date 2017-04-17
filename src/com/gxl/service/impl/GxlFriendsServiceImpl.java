@@ -1,5 +1,6 @@
 package com.gxl.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.gxl.dao.GxlFriendsDao;
 import com.gxl.dao.GxlUserDao;
 import com.gxl.entity.GxlFriends;
 import com.gxl.entity.GxlUser;
+import com.gxl.im.utils.IMApiUtils;
 import com.gxl.service.GxlFriendsService;
 
 @Transactional
@@ -42,10 +44,19 @@ public class GxlFriendsServiceImpl extends BaseServiceImpl<GxlFriends> implement
 			GxlFriends one=friends.get(0);
 			boolean flag=false;
 			if(type!=null&&one.getType()!=type){
+				if(type==1){
+					List<String> blackList=new ArrayList<>();
+					blackList.add(friend.getIm_name());
+					IMApiUtils.getInstance().addIMUserBlackList(user.getIm_name(), blackList);
+				}else if(type==0){
+					IMApiUtils.getInstance().deleteIMUserBlackList(user.getIm_name(), friend.getIm_name());
+				}
 				one.setType(type);			
 				flag=true;
 			}
 			if(if_del!=null&&one.getIf_del()!=if_del){
+				if(if_del==1)
+					IMApiUtils.getInstance().deleteIMUserFriend(user.getIm_name(), friend.getIm_name());
 				one.setIf_del(if_del);
 				flag=true;
 			}

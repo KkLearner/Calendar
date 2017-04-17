@@ -79,6 +79,7 @@ public class FriendsAct {
 					gxlFriendsService.update(one);
 				}
 			}
+			IMApiUtils.getInstance().addIMUserFriend(user.getIm_name(), friend.getIm_name());
 			return ResultReturn.setMap(result, 0, "success", null);
 		}catch(Exception e){
 			e.printStackTrace();
