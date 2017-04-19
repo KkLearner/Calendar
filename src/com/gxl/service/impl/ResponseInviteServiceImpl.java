@@ -13,8 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gxl.common.utils.ResultReturn;
 import com.gxl.dao.GxlFriendsDao;
+import com.gxl.dao.GxlUserDao;
 import com.gxl.dao.ResponseInviteDao;
 import com.gxl.entity.GxlFriends;
+import com.gxl.entity.GxlUser;
 import com.gxl.entity.ResponseInvite;
 import com.gxl.service.ResponseInviteService;
 
@@ -26,6 +28,8 @@ public class ResponseInviteServiceImpl extends BaseServiceImpl<ResponseInvite> i
 	private ResponseInviteDao responseInviteDao;
 	@Autowired
 	private GxlFriendsDao gxlFriendsDao;
+	@Autowired
+	private GxlUserDao gxlUserDao;
 	
 	@Override
 	public Map<String, Object> sendInvitations(Integer taskid,Integer userid,String invitees,Map<String, Object> result){
@@ -52,8 +56,10 @@ public class ResponseInviteServiceImpl extends BaseServiceImpl<ResponseInvite> i
 		List<Map<String, Object>> invitee=new ArrayList<>();
 		try {
 			String []users=invitees.split(",");
-			SimpleDateFormat sf=new SimpleDateFormat();
 			for(String invited:users){
+				GxlUser user=gxlUserDao.getByIdWithoutDel(Integer.valueOf(invited));
+				if(user==null)
+					continue;
 				Map<String, Object> teMap=new HashMap<>();
 				List<ResponseInvite> responseInvites=responseInviteDao.getByCriterion(Restrictions.eq("taskid", taskid),Restrictions.eq("invitee",Integer.valueOf(invited)));
 				if(responseInvites==null||responseInvites.isEmpty())
@@ -84,6 +90,8 @@ public class ResponseInviteServiceImpl extends BaseServiceImpl<ResponseInvite> i
 				default:
 					break;
 				}
+				teMap.put("invitee_img", user.getHead_img());
+				teMap.put("invitee_nick", user.getNickname());
 				teMap.put("content", refuse);
 				teMap.put("start_time", start_time);
 				teMap.put("end_time", end_time);

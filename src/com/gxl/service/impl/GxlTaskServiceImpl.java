@@ -19,8 +19,8 @@ public class GxlTaskServiceImpl extends BaseServiceImpl<GxlTask> implements GxlT
 	@Autowired
 	private GxlTaskDao gxlTaskDao;
 	
-	public List<Map<String, Object>> getTodayAllTask(String what,Integer userid,String date){
-		return gxlTaskDao.getTodayAllTask(what,userid, date);
+	public List<Map<String, Object>> getTodayAllTask(String what,String isshare,Integer userid,String date){
+		return gxlTaskDao.getTodayAllTask(what,isshare,userid, date);
 	}
 
 	@Override
@@ -37,5 +37,10 @@ public class GxlTaskServiceImpl extends BaseServiceImpl<GxlTask> implements GxlT
 	public void copyTask(Integer userid, Integer taskid,Date start_time,
 			Date end_time,String free_time,Date remind_time) {
 		gxlTaskDao.copyTask(userid, taskid,start_time,end_time,free_time,remind_time);
+	}
+	
+	@Override
+	public Map<String, Object> setIsShare(String share,String nShare){
+		return gxlTaskDao.setIsShare(share,nShare);
 	}
 }

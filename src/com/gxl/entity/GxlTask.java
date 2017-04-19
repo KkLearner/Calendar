@@ -62,6 +62,9 @@ public class GxlTask implements java.io.Serializable{
 	@Column(name="remark")
 	private String remark;
 	
+	@Column(name="if_share")
+	private Integer if_share;
+	
 	@Column(name="if_del")
 	private Integer if_del;
 	
@@ -71,8 +74,10 @@ public class GxlTask implements java.io.Serializable{
 
 	public GxlTask(Integer id, Integer userid, Integer type_id, String type_name,String title, String address,
 			String invited_userid, Date start_time, Date end_time,Date remind_time,
-			String free_time, String expect_time, String remark, Integer if_del, Date uDate,String modify_reason) {
+			String free_time, String expect_time, String remark, Integer if_del, Date uDate,String modify_reason,
+			Integer if_share) {
 		super();
+		this.if_share=if_share;
 		this.id = id;
 		this.userid = userid;
 		this.type_id = type_id;
@@ -93,8 +98,10 @@ public class GxlTask implements java.io.Serializable{
 
 	public GxlTask(Integer userid, Integer type_id, String type_name,String title, String address,
 			String invited_userid, Date start_time, Date end_time,Date remind_time,
-			String free_time, String expect_time, String remark, Integer if_del, Date uDate,String modify_reason) {
+			String free_time, String expect_time, String remark, Integer if_del, Date uDate,String modify_reason,
+			Integer if_share) {
 		super();
+		this.if_share=if_share;
 		this.userid = userid;
 		this.type_id = type_id;
 		this.type_name = type_name;
@@ -242,6 +249,14 @@ public class GxlTask implements java.io.Serializable{
 
 	public void setModify_reason(String modify_reason) {
 		this.modify_reason = modify_reason;
+	}
+
+	public Integer getIf_share() {
+		return if_share;
+	}
+
+	public void setIf_share(Integer if_share) {
+		this.if_share = if_share;
 	}	
 	
 	

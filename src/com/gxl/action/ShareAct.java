@@ -88,7 +88,7 @@ public class ShareAct {
 			Integer userid=Integer.valueOf((String)map.get("id"));
 			SimpleDateFormat sf=new SimpleDateFormat("yyyy/MM/dd");
 			String date=sf.format(new Date(Long.valueOf((String)map.get("time"))));
-			List<Map<String, Object>> list=gxlTaskService.getTodayAllTask(" title as content,start_time as startTime,end_time as endTime ",userid, date);
+			List<Map<String, Object>> list=gxlTaskService.getTodayAllTask(" title as content,start_time as startTime,end_time as endTime "," and if_share=0",userid, date);
 			if(list==null||list.isEmpty())
 				return ResultReturn.setJson(result, 1, "no info", data);
 			data.put("arranges", list);

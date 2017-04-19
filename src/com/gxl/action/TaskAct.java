@@ -78,7 +78,7 @@ public class TaskAct {
 			String date=(String)map.get("date");//日期
 			Integer userid=Integer.valueOf((String)map.get("user_id"));//用户id
 			List<Map<String, Object>> list=new ArrayList<>();
-			List<Map<String, Object>> teMaps=gxlTaskService.getTodayAllTask("id,type_id as type,title ",userid, date);
+			List<Map<String, Object>> teMaps=gxlTaskService.getTodayAllTask("id,type_id as type,title ","",userid, date);
 			if(teMaps!=null)
 				list.addAll(teMaps);//获取日程和待办
 			teMaps=gxlFixedTaskService.getAllFixedTask(userid, date);
@@ -131,7 +131,7 @@ public class TaskAct {
 			GxlTask task=new GxlTask(userid, 0, "待办", 
 					(String)map.get("title"), (String)map.get("address"), "", uDate,
 					sf.parse((String)map.get("end_time")), sf.parse((String)map.get("remind_time")), "", "", "", 
-					0, uDate,"");
+					0, uDate,"",0);
 			gxlTaskService.add(task);
 			result.put("taskid", task.getId());
 			return ResultReturn.setMap(result, 0, "success", null);
@@ -176,7 +176,7 @@ public class TaskAct {
 				remind_time=sf.parse(rtime);		
 			GxlTask task=new GxlTask(id, schedule_type+1, typeList.get(schedule_type+1), (String)map.get("title"), 
 					(String)map.get("address"), invites, start_time, end_time,remind_time , free_time,
-					(String)map.get("expect_time"), (String)map.get("remark"), if_del,new java.util.Date(),"");
+					(String)map.get("expect_time"), (String)map.get("remark"), if_del,new java.util.Date(),"",0);
 			gxlTaskService.add(task);
 			result.put("taskid", task.getId());
 			if(!invites.trim().equals(""))
@@ -357,5 +357,16 @@ public class TaskAct {
 			return ResultReturn.setMap(result, 2, exception.getMessage(), null);
 		}
 	}
-		
+	
+	//修改日程
+	@ResponseBody
+	@RequestMapping(value="/SetIsShare",method=RequestMethod.POST, headers="Accept=application/json")
+	public Map<String, Object> setIsShare(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {		
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {			
+			return  gxlTaskService.setIsShare((String)map.get("share"),(String)map.get("nshare"));
+		}catch(Exception exception){			
+			return ResultReturn.setMap(result, 2, exception.getMessage(), null);
+		}
+	}
 }

@@ -247,5 +247,24 @@
         <tr>
     </table>
 </form>
+
+<form action="/Calendar/Task/SetIsShare" method="POST">
+	<table width="500px" border="1px #FFFFFF soild">
+    	<tr>
+        	<th colspan="2" align="left">日程是否分享设置  SetIsShare</th>
+        <tr>
+        <tr>
+        	<td width="30%">share(类型字符串。要设置分享的日程id，多个taskid用，分开 必填)</td>
+            <td><input type="text" name="share"  value="33,34,35"/></td>
+        </tr>
+         <tr>
+        	<td width="30%">nshare(类型字符串。不分享的日程id，多个taskid用，分开 必填)</td>
+            <td><input type="text" name="nshare"  value="36"/></td>
+        </tr>
+        <tr>
+        	<td colspan="2" align="left"><input type="submit" value="go"/> </td>
+        <tr>
+    </table>
+</form>
 </body>
 </html>

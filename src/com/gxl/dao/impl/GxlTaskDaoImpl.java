@@ -17,6 +17,7 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.gxl.common.utils.ResultReturn;
 import com.gxl.dao.GxlTaskDao;
 import com.gxl.entity.GxlTask;
 
@@ -26,7 +27,7 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 	//获取用户某一天的待办和日程
 	//表gxl_task
 	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> getTodayAllTask(String what,Integer userid,String date){
+	public List<Map<String, Object>> getTodayAllTask(String what,String isshare,Integer userid,String date){
 		List<Map<String, Object>> list=null;
 		Session session=sessionFactory.getCurrentSession();
 		Transaction tx;
@@ -41,7 +42,7 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 			list=session.createSQLQuery("select "+what
 					+ " from gxl_task "
 					+ " where userid=:userid and ('"+date+"' BETWEEN DATE_FORMAT(start_time,'%Y/%m/%d') "
-					+ " and DATE_FORMAT(end_time,'%Y/%m/%d')) and if_del=0")
+					+ " and DATE_FORMAT(end_time,'%Y/%m/%d')) and if_del=0 "+isshare)
 					.setInteger("userid", userid).setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP)
 					.list();
 			tx.commit();
@@ -203,7 +204,7 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 			GxlTask newTask=new GxlTask(userid, task.getType_id(), task.getType_name(),
 					task.getTitle(), task.getAddress(), "", 
 					start_time, end_time, remind_time, free_time,
-					task.getExpect_time(), task.getRemark(), 0,uDate,"");
+					task.getExpect_time(), task.getRemark(), 0,uDate,"",0);
 			session.save(newTask);
 			tx.commit();
 		} catch (Exception e) {
@@ -211,4 +212,33 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 		}		
 	}
 	
+	@Override
+	public Map<String, Object> setIsShare(String share,String nShare){
+		Session session=sessionFactory.getCurrentSession();
+		Transaction tx=null;
+		 if (session.getTransaction() != null && session.getTransaction().isActive()) 
+		        tx = session.getTransaction();
+		 else 
+		        tx = session.beginTransaction();
+		Map<String, Object> result=new HashMap<>();
+		try {
+			String hql="update GxlTask task set task.if_share=:if_share where task.id=:taskid";				
+			String []task={share,nShare};
+			for(int i=0;i<2;++i){
+				String tString=task[i];
+				if(tString==null||tString.equals(""))
+					continue;
+				String []shareid=tString.split(",");
+				for(String taskid:shareid)
+					session.createQuery(hql).setInteger("if_share", i).setInteger("taskid", Integer.valueOf(taskid)).executeUpdate();
+				
+			}
+			tx.commit();
+			return  ResultReturn.setMap(result, 0, "success", null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResultReturn.setMap(result, 2, e.getMessage(), null);
+		}
+		
+	}
 }
