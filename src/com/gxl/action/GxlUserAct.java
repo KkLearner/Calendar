@@ -56,8 +56,13 @@ public class GxlUserAct {
 				if(s>127)
 					return ResultReturn.setMap(result, 2, "account is only ascii", null);
 			}
+			String nickname=(String)map.get("nickname");
+			if(nickname==null||nickname.equals("")){
+				nickname=account;
+				map.replace("nickname", nickname);
+			}
 			String imaccount=new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+Math.random();
-			ResponseWrapper wrapper=imApiUtils.createIMUserSingle(imaccount,(String)map.get("password") ,(String)map.get("nickname"));
+			ResponseWrapper wrapper=imApiUtils.createIMUserSingle(imaccount,(String)map.get("password") ,nickname);
 			if(wrapper.hasError())
 				return ResultReturn.setMap(result,3, wrapper.toString(), null);
 			map.put("IM_name", imaccount);			

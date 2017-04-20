@@ -109,5 +109,28 @@
         <tr>
     </table>
 </form>
+
+<form action="/Calendar/Friend/SendMsgFroce" method="POST">
+	<table width="500px" border="1px #FFFFFF soild">
+    	<tr>
+        	<th colspan="2" align="left">强制发信息 SendMsgFroce</th>
+        <tr>
+        <tr>
+        	<td width="30%">userid(环信用户id 必填)</td>
+            <td><input type="text" name="userid"  value="1"/></td>
+        </tr>
+        <tr>
+        	<td width="30%">friendid(环信好友id 必填)</td>
+            <td><input type="text" name="friendid"  value="4"/></td>
+        </tr>  
+        <tr>
+        	<td width="30%">msg(信息 必填)</td>
+            <td><input type="text" name="msg"  value="4"/></td>
+        </tr>
+        <tr>
+        	<td colspan="2" align="left"><input type="submit" value="go"/> </td>
+        <tr>
+    </table>
+</form>
 </body>
 </html>

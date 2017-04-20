@@ -75,15 +75,18 @@ public class FriendsAct {
 				GxlFriends one=friends.get(0);
 				if(one.getIf_del()==1){//将其删除了好友，现在恢复
 					one.setIf_del(0);
+					one.setType(0);
 					one.setuDate(new Date());
 					gxlFriendsService.update(one);
-				}
+				}else
+					return ResultReturn.setMap(result, 3, "you hava added this friend", null);
 			}
 			IMApiUtils.getInstance().addIMUserFriend(user.getIm_name(), friend.getIm_name());
+			IMApiUtils.getInstance().deleteIMUserBlackList(user.getIm_name(), friend.getIm_name());
 			return ResultReturn.setMap(result, 0, "success", null);
 		}catch(Exception e){
 			e.printStackTrace();
-			return ResultReturn.setMap(result, 4, "false", null);
+			return ResultReturn.setMap(result, 4, e.getMessage(), null);
 		}
 	}
 	
@@ -94,10 +97,10 @@ public class FriendsAct {
 	public Map<String,Object> deleteFriend(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
 		Map<String,Object> result=new HashMap<String,Object>();
 		try {
-			return gxlFriendsService.changeFriendType(Integer.valueOf((String)map.get("user_id")), Integer.valueOf((String)map.get("friend_id")), null,1);
+			return gxlFriendsService.changeFriendType(Integer.valueOf((String)map.get("user_id")), Integer.valueOf((String)map.get("friend_id")), 1,1);
 		}catch (Exception e) {
 			e.printStackTrace();
-			return ResultReturn.setMap(result, 4, "false", null);
+			return ResultReturn.setMap(result, 4, e.getMessage(), null);
 		}
 	}
 	
@@ -122,7 +125,7 @@ public class FriendsAct {
 			return ResultReturn.setMap(result, 0, "success", null);
 		}catch (Exception e) {
 			e.printStackTrace();
-			return ResultReturn.setMap(result, 4, "false", null);
+			return ResultReturn.setMap(result, 4, e.getMessage(), null);
 		}
 	}
 	
@@ -136,7 +139,7 @@ public class FriendsAct {
 			return gxlFriendsService.changeFriendType(Integer.valueOf((String)map.get("user_id")),Integer.valueOf((String)map.get("friend_id")) , 1,null);
 		}catch (Exception e) {
 			e.printStackTrace();
-			return ResultReturn.setMap(result, 4, "false", null);
+			return ResultReturn.setMap(result, 4, e.getMessage(), null);
 		}
 	}
 	
@@ -150,7 +153,84 @@ public class FriendsAct {
 			return gxlFriendsService.changeFriendType(Integer.valueOf((String)map.get("user_id")), Integer.valueOf((String)map.get("friend_id")), 0,null);
 		}catch (Exception e) {
 			e.printStackTrace();
-			return ResultReturn.setMap(result, 4, "false", null);
+			return ResultReturn.setMap(result, 4, e.getMessage(), null);
+		}
+	}
+	
+	//获取离线信息数
+	//表gxl_friends  
+	@ResponseBody
+	@RequestMapping(value="/GetOffLineMsg",method=RequestMethod.GET,headers="Accept=application/json")
+	public Map<String,Object> getOffLineMsg(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
+		Map<String,Object> result=new HashMap<String,Object>();
+		try {
+			ResponseWrapper wrapper=IMApiUtils.getInstance().getOfflineMsgCount((String)map.get("userid"));
+			if(wrapper.hasError())
+				return ResultReturn.setMap(result, 1, wrapper.toString(), null);
+			result.put("result", wrapper.getResponseBody());
+			return ResultReturn.setMap(result, 0, "success", null);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return ResultReturn.setMap(result, 4, e.getMessage(), null);
+		}
+	}
+	
+	//强制发信息
+	//表gxl_friends  
+	@ResponseBody
+	@RequestMapping(value="/SendMsgFroce",method=RequestMethod.POST,headers="Accept=application/json")
+	public Map<String,Object> sendMsgFroce(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
+		Map<String,Object> result=new HashMap<String,Object>();
+		try {
+			List<String> to=new ArrayList<>();
+			to.add((String)map.get("friendid"));
+			ResponseWrapper wrapper=IMApiUtils.getInstance().sendTxt((String)map.get("userid"), to, (String)map.get("msg"),  "users");
+			if(wrapper.hasError())
+				return ResultReturn.setMap(result, 1, wrapper.toString(), null);
+			result.put("result", wrapper.getResponseBody());
+			return ResultReturn.setMap(result, 0, "success", null);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return ResultReturn.setMap(result, 4,e.getMessage(), null);
+		}
+	}
+	
+	private Map<String, Object> getRelationList(Map<String, Object>map,Integer type) {
+		Map<String,Object> result=new HashMap<String,Object>();
+		Integer userid=Integer.valueOf((String)map.get("userid"));
+		String sql="select a.gxlid,a.IM_name,a.nickname,a.head_img "
+				+ "from gxl_user as a,gxl_friends as b "
+				+ "where a.gxlid=b.friend_id and b.type="+type+" and b.if_del=0 and b.user_id="+userid;
+		List<Map<String, Object>> list=gxlFriendsService.getBySQL(sql);
+		if(list==null||list.isEmpty())
+			return ResultReturn.setMap(result, 1, "no info", null);
+		return ResultReturn.setMap(result, 0, "success", list);
+	}
+	//获取好友列表
+	//表gxl_friends  
+	@ResponseBody
+	@RequestMapping(value="/GetFriendsList",method=RequestMethod.GET,headers="Accept=application/json")
+	public Map<String,Object> getFriendsList(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
+		Map<String,Object> result=new HashMap<String,Object>();
+		try {
+			return getRelationList(map, 0);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return ResultReturn.setMap(result,2,e.getMessage(), null);
+		}
+	}
+	
+	//获取黑名单列表
+	//表gxl_friends  
+	@ResponseBody
+	@RequestMapping(value="/GetBlackList",method=RequestMethod.GET,headers="Accept=application/json")
+	public Map<String,Object> getBlackList(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
+		Map<String,Object> result=new HashMap<String,Object>();
+		try {
+			return getRelationList(map, 1);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return ResultReturn.setMap(result,2,e.getMessage(), null);
 		}
 	}
 }
