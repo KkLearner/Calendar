@@ -198,7 +198,7 @@ public class FriendsAct {
 	private Map<String, Object> getRelationList(Map<String, Object>map,Integer type) {
 		Map<String,Object> result=new HashMap<String,Object>();
 		Integer userid=Integer.valueOf((String)map.get("userid"));
-		String sql="select a.gxlid,a.IM_name,a.nickname,a.head_img "
+		String sql="select a.gxlid,a.im_name,a.nickname,a.head_img "
 				+ "from gxl_user as a,gxl_friends as b "
 				+ "where a.gxlid=b.friend_id and b.type="+type+" and b.if_del=0 and b.user_id="+userid;
 		List<Map<String, Object>> list=gxlFriendsService.getBySQL(sql);
