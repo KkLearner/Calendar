@@ -41,11 +41,9 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 			//根据用户id和日期再表gxl_task查找当天的日程和待办
 			list=session.createSQLQuery("select "+what
 					+ " from gxl_task "
-					+ " where userid=:userid and ( DATE_FORMAT(start_time,'%Y/%m')=:date "
-					+ " or DATE_FORMAT(end_time,'%Y/%m')=:date) and if_del=0 "+isshare)
-					.setInteger("userid", userid)
-					.setString("date", date)
-					.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP)
+					+ " where userid=:userid and ('"+date+"' BETWEEN DATE_FORMAT(start_time,'%Y/%m/%d') "
+					+ " and DATE_FORMAT(end_time,'%Y/%m/%d')) and if_del=0 " +isshare)
+					.setInteger("userid", userid).setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP)
 					.list();
 			tx.commit();
 			return list;
@@ -256,13 +254,15 @@ public class GxlTaskDaoImpl extends BaseDaoImpl<GxlTask> implements GxlTaskDao {
 	    } else {
 	        tx = session.beginTransaction();
 	    }	
+	    
 		try {
-			//根据用户id和日期再表gxl_task查找当天的日程和待办
 			list=session.createSQLQuery("select "+what
 					+ " from gxl_task "
-					+ " where userid=:userid and ('"+date+"' BETWEEN DATE_FORMAT(start_time,'%Y/%m') "
-					+ " and DATE_FORMAT(end_time,'%Y/%m')) and if_del=0 ")
-					.setInteger("userid", userid).setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP)
+					+ " where userid=:userid and ( DATE_FORMAT(start_time,'%Y/%m')=:date "
+					+ " or DATE_FORMAT(end_time,'%Y/%m')=:date) and if_del=0 ")
+					.setInteger("userid", userid)
+					.setString("date", date)
+					.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP)
 					.list();
 			tx.commit();
 			return list;
