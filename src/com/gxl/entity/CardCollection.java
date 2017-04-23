@@ -24,23 +24,28 @@ public class CardCollection implements java.io.Serializable{
 	@Column(name="friend_id")
 	private Integer friend_id;
 	
+	@Column(name="group_name")
+	private String group_name;
+	
 	@Column(name="if_del")
 	private Integer if_del;
 	
 	@Column(name="uDate")
 	private Date uDate;
 
-	public CardCollection(Integer id, Integer user_id, Integer friend_id, Integer if_del, Date uDate) {
+	public CardCollection(Integer id, Integer user_id, Integer friend_id, String group_name,Integer if_del, Date uDate) {
 		super();
 		this.id = id;
+		this.group_name=group_name;
 		this.user_id = user_id;
 		this.friend_id = friend_id;
 		this.if_del = if_del;
 		this.uDate = uDate;
 	}
 
-	public CardCollection(Integer user_id, Integer friend_id, Integer if_del, Date uDate) {
+	public CardCollection(Integer user_id, Integer friend_id,String group_name, Integer if_del, Date uDate) {
 		super();
+		this.group_name=group_name;
 		this.user_id = user_id;
 		this.friend_id = friend_id;
 		this.if_del = if_del;
@@ -89,6 +94,14 @@ public class CardCollection implements java.io.Serializable{
 
 	public void setuDate(Date uDate) {
 		this.uDate = uDate;
+	}
+
+	public String getGroup_name() {
+		return group_name;
+	}
+
+	public void setGroup_name(String group_name) {
+		this.group_name = group_name;
 	}
 	
 	

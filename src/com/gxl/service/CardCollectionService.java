@@ -7,5 +7,5 @@ import com.gxl.entity.CardCollection;
 
 public interface CardCollectionService extends BaseService<CardCollection> {
 
-	public List<Map<String, Object>> shareCardHolders(Integer userid);
+	public List<Map<String, Object>> shareCardHolders(Integer userid,String group_name);
 }

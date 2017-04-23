@@ -1,8 +1,5 @@
 package com.gxl.action;
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,11 +32,8 @@ import com.gxl.service.CardCollectionService;
 import com.gxl.service.FeedbackService;
 import com.gxl.service.GxlTaskService;
 import com.gxl.service.GxlUserService;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import net.sf.json.JSONObject;
-import sun.java2d.d3d.D3DScreenUpdateManager;
-import sun.misc.BASE64Decoder;
 
 @Controller
 @RequestMapping("/Share")
@@ -108,7 +102,7 @@ public class ShareAct {
 		Map<String, Object> result=new HashMap<>();
 		try {
 			Map<String, Object> data=new HashMap<>();
-			List<Map<String, Object>> list=cardCollectionService.shareCardHolders(Integer.valueOf((String)map.get("id")));
+			List<Map<String, Object>> list=cardCollectionService.shareCardHolders(Integer.valueOf((String)map.get("id")),"");
 			if(list==null||list.isEmpty())
 				return ResultReturn.setJson(result, 1, "no info", data);
 			data.put("friends", list);

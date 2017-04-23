@@ -16,7 +16,7 @@ import com.gxl.entity.CardCollection;
 public class CardCollectionDaoImpl extends BaseDaoImpl<CardCollection> implements CardCollectionDao {
 
 	@Override
-	public List<Map<String, Object>> shareCardHolders(Integer userid) {
+	public List<Map<String, Object>> shareCardHolders(Integer userid,String group_name) {
 		List<Map<String, Object>> list=null;
 		Session session=sessionFactory.getCurrentSession();
 		Transaction tx;
@@ -27,9 +27,9 @@ public class CardCollectionDaoImpl extends BaseDaoImpl<CardCollection> implement
 	        tx = session.beginTransaction();
 	    }	
 		try {
-			String sql="select a.nickname as name,a.partnership_name as category,a.partnership_detail as company "
+			String sql="select distinct a.nickname as name,a.partnership_name as category,a.partnership_detail as company "
 					+ "from gxl_user as a,card_collection as b "
-					+ "where b.friend_id=a.gxlid and b.if_del=0 and a.if_del=0 and b.user_id="+userid;
+					+ "where b.friend_id=a.gxlid and b.if_del=0 and a.if_del=0 and b.user_id="+userid+group_name;
 			list=session.createSQLQuery(sql).setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP).list();			
 		} catch (Exception e) {
 			e.printStackTrace();

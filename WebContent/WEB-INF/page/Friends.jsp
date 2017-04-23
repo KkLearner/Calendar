@@ -132,5 +132,24 @@
         <tr>
     </table>
 </form>
+
+<form action="/Calendar/Friend/GetCardHolders" method="POST">
+	<table width="500px" border="1px #FFFFFF soild">
+    	<tr>
+        	<th colspan="2" align="left">通过用户id和该用户名片夹标签  GetCardHolders</th>
+        <tr>
+        <tr>
+        	<td width="30%">id(用户id 必填)</td>
+            <td><input type="text" name="id"  value="1"/></td>
+        </tr>
+        <tr>
+        	<td width="30%">card_name(名片夹名字 必填)</td>
+            <td><input type="text" name="card_name"  value="我的好友"/></td>
+        </tr>  
+        <tr>
+        	<td colspan="2" align="left"><input type="submit" value="go"/> </td>
+        <tr>
+    </table>
+</form>
 </body>
 </html>

@@ -26,6 +26,7 @@ import com.gxl.entity.GxlFriends;
 import com.gxl.entity.GxlUser;
 import com.gxl.im.utils.IMApiUtils;
 import com.gxl.im.wrapper.ResponseWrapper;
+import com.gxl.service.CardCollectionService;
 import com.gxl.service.GxlFriendsService;
 import com.gxl.service.GxlUserService;
 
@@ -38,6 +39,9 @@ public class FriendsAct {
 	private GxlUserService gxlUserService;
 	@Autowired
 	private GxlFriendsService gxlFriendsService;
+	@Autowired
+	private CardCollectionService cardCollectionService;
+	
 	private Map<Integer, String> sourceList=new HashMap<Integer,String>(){{
 		put(0,"微信");
 		put(1,"QQ");
@@ -232,5 +236,25 @@ public class FriendsAct {
 			e.printStackTrace();
 			return ResultReturn.setMap(result,2,e.getMessage(), null);
 		}
+	}
+	
+	//通过用户id和该用户名片夹标签
+	//表card_collection  
+	@ResponseBody
+	@RequestMapping(value="/GetCardHolders",method=RequestMethod.POST,headers="Accept=application/json")
+	public Map<String,Object> getCardHolders(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
+		Map<String, Object> result=new HashMap<>();
+		try {
+			Map<String, Object> data=new HashMap<>();
+			List<Map<String, Object>> list=cardCollectionService.shareCardHolders(Integer.valueOf((String)map.get("id"))," and b.group_name='"+(String)map.get("card_name")+"'");
+			if(list==null||list.isEmpty())
+				return ResultReturn.setJson(result, 1, "no info", data);
+			data.put("friends", list);
+			ResultReturn.setJson(result, 0, "success", data);
+		}catch(Exception exception){
+			exception.printStackTrace();
+			ResultReturn.setJson(result, 2, exception.getMessage(),null);
+		}
+		return result;
 	}
 }

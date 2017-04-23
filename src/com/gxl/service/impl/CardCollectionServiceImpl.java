@@ -19,7 +19,7 @@ public class CardCollectionServiceImpl extends BaseServiceImpl<CardCollection> i
 	private CardCollectionDao cardCollectionDao;
 	
 	@Override
-	public List<Map<String, Object>> shareCardHolders(Integer userid){
-		return cardCollectionDao.shareCardHolders(userid);
+	public List<Map<String, Object>> shareCardHolders(Integer userid,String group_name){
+		return cardCollectionDao.shareCardHolders(userid,group_name);
 	}
 }
