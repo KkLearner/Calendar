@@ -93,6 +93,28 @@ public class TaskAct {
 		}
 	}
 	
+	//通过日期获取该用户该天所有待办和日程
+	//表gxl_task  gxl_fixed_task
+	@ResponseBody
+	@RequestMapping(value="/GetMonthAllTask",method=RequestMethod.POST,headers="Accept=application/json")
+	public Map<String,Object> getMonthAllTask(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
+		Map<String,Object> result=new HashMap<String,Object>();
+		try {
+			String date=(String)map.get("date");//日期
+			Integer userid=Integer.valueOf((String)map.get("user_id"));//用户id
+			List<Map<String, Object>> list=new ArrayList<>();
+			List<Map<String, Object>> teMaps=gxlTaskService.getMonthAllTask("id,type_id as type,title,remark as content,remind_time as inform_time,address as location,start_time,end_time",userid, date);
+			if(teMaps!=null)
+				list.addAll(teMaps);//获取日程和待办
+			if (list==null||list.isEmpty()) 
+				return ResultReturn.setMap(result, 1, "no info", null);
+			return ResultReturn.setMap(result, 0, "success", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResultReturn.setMap(result, 2, "false", null);
+		}
+	}
+	
 	//通过id删除待办/日程
 	//表gxl_task  gxl_fixed_task
 	@ResponseBody

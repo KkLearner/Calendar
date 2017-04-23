@@ -43,4 +43,9 @@ public class GxlTaskServiceImpl extends BaseServiceImpl<GxlTask> implements GxlT
 	public Map<String, Object> setIsShare(String share,String nShare){
 		return gxlTaskDao.setIsShare(share,nShare);
 	}
+
+	@Override
+	public List<Map<String, Object>> getMonthAllTask(String what, Integer userid, String date) {
+		return gxlTaskDao.getMonthAllTask(what, userid, date);
+	}
 }

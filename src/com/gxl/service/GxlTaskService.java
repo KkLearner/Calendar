@@ -13,6 +13,7 @@ import com.gxl.entity.GxlTask;
 public interface GxlTaskService extends BaseService<GxlTask> {
 
 	public List<Map<String, Object>> getTodayAllTask(String what,String isshare,Integer userid,String date);
+	public List<Map<String, Object>> getMonthAllTask(String what,Integer userid,String date);
 	public  Map<String, Object> getInviteInfo(Integer taskid);
 	public  Map<String, Object> getModifyInfo(Integer taskid);
 	void copyTask(Integer userid, Integer taskid,Date start_time,

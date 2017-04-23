@@ -10,6 +10,7 @@ import com.gxl.entity.GxlTask;
 public interface GxlTaskDao extends BaseDao<GxlTask> {
 
 	public List<Map<String, Object>> getTodayAllTask(String what,String isshare,Integer userid,String date);
+	public List<Map<String, Object>> getMonthAllTask(String what,Integer userid,String date);
 	public Map<String, Object> getInviteInfo(Integer taskid);
 	public  Map<String, Object> getModifyInfo(Integer taskid);
 	public void copyTask(Integer userid, Integer taskid,Date start_time,
