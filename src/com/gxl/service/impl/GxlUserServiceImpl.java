@@ -154,4 +154,10 @@ public class GxlUserServiceImpl extends BaseServiceImpl<GxlUser> implements GxlU
 		}
 		return result;
 	}
+
+
+	@Override
+	public List<Map<String, Object>> getAllUser(String account) {
+		return gxlUserDao.getAllUser(account);
+	}
 }

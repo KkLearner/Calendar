@@ -190,4 +190,17 @@ public class GxlUserAct {
 			return ResultReturn.setMap(result, 3, "false", null);
 		}
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="/GetAllUser",method=RequestMethod.POST,headers="Accept=application/json")
+	public Map<String,Object> getAllUser(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {
+		Map<String,Object> result=new HashMap<String,Object>();
+		try {
+			String gxl_account=(String)map.remove("account");			
+			return ResultReturn.setMap(result, 0, "success", gxlUserService.getAllUser(gxl_account));
+		}catch (Exception e) {
+			e.printStackTrace();
+			return ResultReturn.setMap(result, 3, "false", null);
+		}
+	}
 }

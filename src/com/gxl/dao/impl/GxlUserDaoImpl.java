@@ -52,5 +52,30 @@ public class GxlUserDaoImpl extends BaseDaoImpl<GxlUser> implements GxlUserDao {
 	public Map<String, Object> shareCode(Integer userid){
 		return share("a.code as invitationCode ", userid);
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, Object>> getAllUser(String account) {
+		List<Map<String, Object>> userList = null;
+		Session session=sessionFactory.getCurrentSession();
+		Transaction tx;
+	    if (session.getTransaction() != null
+	            && session.getTransaction().isActive()) {
+	        tx = session.getTransaction();
+	    } else {
+	        tx = session.beginTransaction();
+	    }
+	    try {
+			String sql="select nickname, gxlid"
+					+ " from gxl_user "
+					+ " where if_del=0 and gxl_account like '%"+account+"%'";
+			userList = session.createSQLQuery(sql)					
+						.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP).list();						
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return userList;
+	}
 	
 }

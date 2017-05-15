@@ -20,4 +20,6 @@ public interface GxlUserService extends BaseService<GxlUser> {
 	public Map<String, Object> shareCode(Integer userid);
 	
 	public Map<String, Object> shareAllInfo(Integer type,Integer userid);
+	
+	public List<Map<String, Object>> getAllUser(String account);
 }

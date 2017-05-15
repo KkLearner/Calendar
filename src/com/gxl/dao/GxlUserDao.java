@@ -13,4 +13,7 @@ public interface GxlUserDao extends BaseDao<GxlUser> {
 	
 	public Map<String, Object> shareCode(Integer userid);
 	
+	public List<Map<String, Object>> getAllUser(String account);
+	
+	
 }
