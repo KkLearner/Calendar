@@ -155,5 +155,19 @@
     </table>
 </form>
 
+<form action="/Calendar/GxlUser/GetAllUser" method="POST">
+	<table width="500px" border="1px #FFFFFF soild">
+    	<tr>
+        	<th colspan="2" align="left">获取所有以注册账号（用于添加好友时的账号搜索）  GetAllUser</th>
+        <tr>
+        <tr>
+        	<td width="30%">account(账号  必填)</td>
+            <td><input type="text" name="account"  value="121024"/></td>
+        </tr>   
+        <tr>
+        	<td colspan="2" align="left"><input type="submit" value="go"/> </td>
+        <tr>
+    </table>
+</form>
 </body>
 </html>

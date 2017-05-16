@@ -92,18 +92,13 @@ public class GxlUserAct {
 				return ResultReturn.setMap(result, 1, "no this user", null);
 			if(!user.getPassword().equals((String)map.get("password")))//比较密码
 				return ResultReturn.setMap(result, 2, "password is not correct", null);
-			ResponseWrapper wrapper=imApiUtils.checkIMUserOnline(user.getIm_name());
-			if(wrapper.hasError())
-				return ResultReturn.setMap(result, 3, wrapper.toString(), null);
-			JsonNode data=((ObjectNode)wrapper.getResponseBody()).get("data");
-			if(data.get(account).asText().equals("online"))
-				return ResultReturn.setMap(result, 4, "you have logined,please don't login again" , null);
+			result.put("im_name", user.getIm_name());//im_name	
 			result.put("id", user.getGxlid());//id	
 			return ResultReturn.setMap(result, 0, "success", null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.clear();
-			return ResultReturn.setMap(result, 4, e.getMessage(), null);
+			return ResultReturn.setMap(result, 3, e.getMessage(), null);
 		}
 	}
 	
@@ -124,7 +119,8 @@ public class GxlUserAct {
 			result.put("nick_name", user.getNickname());//昵称
 			result.put("id", user.getGxlid());//id
 			result.put("area", user.getAddress());//地址
-			result.put("signature", user.getSignature());//个人签名		
+			result.put("signature", user.getSignature());//个人签名
+			result.put("im_name", user.getIm_name());//im_name
 			return ResultReturn.setMap(result, 0, "success", null);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -182,15 +178,18 @@ public class GxlUserAct {
 					return ResultReturn.setMap(result, 3, "img error", null);
 				values.replace("head_img", pic);
 			}
+			imApiUtils.resetIMUserNickname(user.getIm_name(), (String)map.get("nickname"));
 			values.put("uDate", new Date());
 			gxlUserService.update(values, condition);
 			return ResultReturn.setMap(result, 0, "success", null);
 		}catch (Exception e) {
 			e.printStackTrace();
-			return ResultReturn.setMap(result, 3, "false", null);
+			return ResultReturn.setMap(result, 3, e.getMessage(), null);
 		}
 	}
 	
+	//获取所有以注册账号（用于添加好友时的账号搜索）
+	//表 gxl_user gxl_friend
 	@ResponseBody
 	@RequestMapping(value="/GetAllUser",method=RequestMethod.POST,headers="Accept=application/json")
 	public Map<String,Object> getAllUser(@RequestParam Map<String,Object>map,HttpServletRequest request, HttpServletResponse response,HttpSession session ,Model model) throws UnsupportedEncodingException, ClassNotFoundException, NoSuchFieldException, SecurityException, ParseException {

@@ -210,6 +210,7 @@ public class FriendsAct {
 			return ResultReturn.setMap(result, 1, "no info", null);
 		return ResultReturn.setMap(result, 0, "success", list);
 	}
+	
 	//获取好友列表
 	//表gxl_friends  
 	@ResponseBody
